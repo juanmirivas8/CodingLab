@@ -469,16 +469,6 @@ fabric.properties
 *.trc
 
 # ====================
-# Docker
-# ====================
-
-# Docker
-.dockerignore
-Dockerfile*
-docker-compose*
-.docker
-
-# ====================
 # OS Generated Files
 # ====================
 
