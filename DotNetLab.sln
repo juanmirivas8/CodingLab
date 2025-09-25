@@ -1,0 +1,24 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetLab.Model", "DotNetLab.Model\DotNetLab.Model.csproj", "{3CE5C134-F5A6-44E1-A754-54F782E53158}"
+EndProject
+Project("{42EA0DBD-9CF1-443E-919E-BE9C484E4577}") = "DotNetLab.Database", "DotNetLab.Database\DotNetLab.Database.sqlproj", "{4BDB2386-E1A6-4CE8-9D87-231543569282}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3CE5C134-F5A6-44E1-A754-54F782E53158}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3CE5C134-F5A6-44E1-A754-54F782E53158}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3CE5C134-F5A6-44E1-A754-54F782E53158}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3CE5C134-F5A6-44E1-A754-54F782E53158}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4BDB2386-E1A6-4CE8-9D87-231543569282}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4BDB2386-E1A6-4CE8-9D87-231543569282}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4BDB2386-E1A6-4CE8-9D87-231543569282}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4BDB2386-E1A6-4CE8-9D87-231543569282}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+	EndGlobalSection
+EndGlobal
