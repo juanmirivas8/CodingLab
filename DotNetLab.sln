@@ -4,6 +4,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetLab.Model", "DotNetLa
 EndProject
 Project("{42EA0DBD-9CF1-443E-919E-BE9C484E4577}") = "DotNetLab.Database", "DotNetLab.Database\DotNetLab.Database.sqlproj", "{4BDB2386-E1A6-4CE8-9D87-231543569282}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetLab.MinimalAPI.Host", "DotNetLab.MinimalAPI.Host\DotNetLab.MinimalAPI.Host.csproj", "{674F66C6-79EC-4D3E-87CB-CE98479984A0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetLab.Services", "DotNetLab.Services\DotNetLab.Services.csproj", "{7A6C1969-6405-485E-B174-52F041588196}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,6 +22,14 @@ Global
 		{4BDB2386-E1A6-4CE8-9D87-231543569282}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4BDB2386-E1A6-4CE8-9D87-231543569282}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4BDB2386-E1A6-4CE8-9D87-231543569282}.Release|Any CPU.Build.0 = Release|Any CPU
+		{674F66C6-79EC-4D3E-87CB-CE98479984A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{674F66C6-79EC-4D3E-87CB-CE98479984A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{674F66C6-79EC-4D3E-87CB-CE98479984A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{674F66C6-79EC-4D3E-87CB-CE98479984A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A6C1969-6405-485E-B174-52F041588196}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A6C1969-6405-485E-B174-52F041588196}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A6C1969-6405-485E-B174-52F041588196}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A6C1969-6405-485E-B174-52F041588196}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 	EndGlobalSection
