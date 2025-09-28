@@ -8,6 +8,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\DotNetLab.Model\DotNetLab.Model.csproj" />
+      <ProjectReference Include="..\DotNetLab.Data\DotNetLab.Data.csproj" />
     </ItemGroup>
 
 </Project>

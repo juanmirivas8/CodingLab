@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetLab.MinimalAPI.Host",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetLab.Services", "DotNetLab.Services\DotNetLab.Services.csproj", "{7A6C1969-6405-485E-B174-52F041588196}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetLab.Data", "DotNetLab.Data\DotNetLab.Data.csproj", "{4A7A9F1F-5196-439B-A751-5B1920459DC8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,6 +32,10 @@ Global
 		{7A6C1969-6405-485E-B174-52F041588196}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7A6C1969-6405-485E-B174-52F041588196}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7A6C1969-6405-485E-B174-52F041588196}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A7A9F1F-5196-439B-A751-5B1920459DC8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A7A9F1F-5196-439B-A751-5B1920459DC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A7A9F1F-5196-439B-A751-5B1920459DC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A7A9F1F-5196-439B-A751-5B1920459DC8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 	EndGlobalSection

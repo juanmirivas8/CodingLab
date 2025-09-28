@@ -17,7 +17,7 @@ public static class UserEndpoints
             .Produces<IEnumerable<User>>(StatusCodes.Status200OK)
             .WithOpenApi();
 
-        userGroup.MapGet("/{id:int}", GetUserById)
+        userGroup.MapGet("/{id:guid}", GetUserById)
             .WithName("GetUserById")
             .WithSummary("Get user by ID")
             .WithDescription("Retrieves a specific user by their unique identifier")
@@ -28,13 +28,13 @@ public static class UserEndpoints
         userGroup.MapPost("/", CreateUser)
             .WithName("CreateUser")
             .WithSummary("Create a new user")
-            .WithDescription("Creates a new user in the system")
-            .Accepts<User>("application/json")
+            .WithDescription("Creates a new user in the system. The Id is automatically generated.")
+            .Accepts<CreateUserDto>("application/json")
             .Produces<User>(StatusCodes.Status201Created)
             .Produces(StatusCodes.Status400BadRequest)
             .WithOpenApi();
 
-        userGroup.MapPut("/{id:int}", UpdateUser)
+        userGroup.MapPut("/{id:guid}", UpdateUser)
             .WithName("UpdateUser")
             .WithSummary("Update an existing user")
             .WithDescription("Updates an existing user with the provided information")
@@ -44,7 +44,7 @@ public static class UserEndpoints
             .Produces(StatusCodes.Status400BadRequest)
             .WithOpenApi();
 
-        userGroup.MapDelete("/{id:int}", DeleteUser)
+        userGroup.MapDelete("/{id:guid}", DeleteUser)
             .WithName("DeleteUser")
             .WithSummary("Delete a user")
             .WithDescription("Removes a user from the system by their unique identifier")
@@ -59,25 +59,25 @@ public static class UserEndpoints
         return Results.Ok(users);
     }
 
-    async private static Task<IResult> GetUserById(int id, IUserService userService)
+    async private static Task<IResult> GetUserById(Guid id, IUserService userService)
     {
         var user = await userService.GetUserByIdAsync(id);
         return user is not null ? Results.Ok(user) : Results.NotFound();
     }
 
-    async private static Task<IResult> CreateUser(User user, IUserService userService)
+    async private static Task<IResult> CreateUser(CreateUserDto createUserDto, IUserService userService)
     {
-        var createdUser = await userService.CreateUserAsync(user);
+        var createdUser = await userService.CreateUserAsync(createUserDto);
         return Results.Created($"/users/{createdUser.Id}", createdUser);
     }
 
-    async private static Task<IResult> UpdateUser(int id, User user, IUserService userService)
+    async private static Task<IResult> UpdateUser(Guid id, User user, IUserService userService)
     {
         var updatedUser = await userService.UpdateUserAsync(id, user);
         return updatedUser is not null ? Results.Ok(updatedUser) : Results.NotFound();
     }
 
-    async private static Task<IResult> DeleteUser(int id, IUserService userService)
+    async private static Task<IResult> DeleteUser(Guid id, IUserService userService)
     {
         var deleted = await userService.DeleteUserAsync(id);
         return deleted ? Results.NoContent() : Results.NotFound();
