@@ -25,6 +25,10 @@ public static class ServiceCollectionExtensions
         // Add Services
         services.AddScoped<IUserService, UserService>();
         
+        // Add health checks with database connectivity check
+        services.AddHealthChecks()
+            .AddSqlServer(configuration.GetConnectionString("DefaultConnection")!, name: "database");
+        
         return services;
     }
 }

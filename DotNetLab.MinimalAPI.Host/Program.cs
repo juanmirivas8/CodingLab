@@ -11,14 +11,21 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment() || app.Environment.EnvironmentName == "Docker")
 {
     app.MapOpenApi();
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+// Only use HTTPS redirection in development (not in Docker)
+if (!app.Environment.EnvironmentName.Equals("Docker"))
+{
+    app.UseHttpsRedirection();
+}
+
+// Add health check endpoint
+app.MapHealthChecks("/health");
 
 // Map all endpoints
 app.MapApplicationEndpoints();
