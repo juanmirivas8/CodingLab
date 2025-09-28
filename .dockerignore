@@ -1,0 +1,63 @@
+﻿# Build outputs
+**/bin/
+**/obj/
+**/out/
+**/.vs/
+**/.vscode/
+**/Debug/
+**/Release/
+
+# OS and IDE files
+.DS_Store
+Thumbs.db
+*.user
+*.suo
+*.cache
+*.log
+*.swp
+*.swo
+*~
+
+# Git files
+.git/
+.gitignore
+
+# Docker files
+Dockerfile*
+.dockerignore
+
+# Documentation
+README*.md
+**/*.md
+
+# NuGet packages
+**/packages/
+*.nupkg
+
+# Test results
+**/TestResults/
+**/test-results/
+
+# IDE settings
+**/.idea/
+**/.vs/
+**/.vscode/
+
+# Temporary files
+**/tmp/
+**/temp/
+
+# Database files
+**/*.db
+**/*.sqlite
+**/*.mdf
+**/*.ldf
+
+# Deployment and publishing profiles
+**/PublishProfiles/
+**/*.pubxml
+**/*.publish.xml
+
+# Azure and deployment files
+**/Properties/PublishProfiles/
+**/DeploymentFiles/
