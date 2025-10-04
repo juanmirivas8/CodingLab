@@ -1,8 +1,11 @@
-﻿using DotNetLab.Model.Framework;
+﻿using System.ComponentModel;
+using DotNetLab.Model.Framework;
 using DotNetLab.Services.Interfaces;
+using ModelContextProtocol.Server;
 
 namespace DotNetLab.MinimalAPI.Host.Endpoints;
 
+[McpServerToolType]
 public static class UserEndpoints
 {
     public static void MapUserEndpoints(this IEndpointRouteBuilder endpoints)
@@ -53,30 +56,35 @@ public static class UserEndpoints
             .WithOpenApi();
     }
 
+    [McpServerTool(Name = "get_all_users"), Description("Get all users")]
     async private static Task<IResult> GetAllUsers(IUserService userService)
     {
         var users = await userService.GetAllUsersAsync();
         return Results.Ok(users);
     }
 
+    [McpServerTool(Name = "get_user_by_id"), Description("Get user by ID")]
     async private static Task<IResult> GetUserById(Guid id, IUserService userService)
     {
         var user = await userService.GetUserByIdAsync(id);
         return user is not null ? Results.Ok(user) : Results.NotFound();
     }
 
+    [McpServerTool(Name = "create_user"), Description("Create a new user")]
     async private static Task<IResult> CreateUser(CreateUserDto createUserDto, IUserService userService)
     {
         var createdUser = await userService.CreateUserAsync(createUserDto);
         return Results.Created($"/users/{createdUser.Id}", createdUser);
     }
 
+    [McpServerTool(Name = "update_user"), Description("Update an existing user")]
     async private static Task<IResult> UpdateUser(Guid id, User user, IUserService userService)
     {
         var updatedUser = await userService.UpdateUserAsync(id, user);
         return updatedUser is not null ? Results.Ok(updatedUser) : Results.NotFound();
     }
 
+    [McpServerTool(Name = "delete_user"), Description("Delete a user")]
     async private static Task<IResult> DeleteUser(Guid id, IUserService userService)
     {
         var deleted = await userService.DeleteUserAsync(id);

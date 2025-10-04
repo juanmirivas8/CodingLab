@@ -7,6 +7,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddApplicationServices(builder.Configuration);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services
+    .AddMcpServer()
+    .WithHttpTransport()
+    .WithToolsFromAssembly();
 
 var app = builder.Build();
 
@@ -29,5 +33,6 @@ app.MapHealthChecks("/health");
 
 // Map all endpoints
 app.MapApplicationEndpoints();
+app.MapMcp("api-mcp");
 
 app.Run();
