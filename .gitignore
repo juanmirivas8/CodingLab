@@ -163,7 +163,9 @@ DocProject/Help/html
 publish/
 
 # Publish Web Output
+# Exception: Allow database publish profiles
 *.[Pp]ublish.xml
+!PodmanLocal.publish.xml
 *.azurePubxml
 # Note: Comment the next line if you want to checkin your web deploy settings,
 # but database connection strings (with potential passwords) will be unencrypted
