@@ -8,7 +8,10 @@
       "launchUrl": "swagger",
       "applicationUrl": "http://localhost:5123",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        // Para sobrescribir configuraciones, puedes agregar:
+        "ConnectionStrings__DefaultConnection": "Server=127.0.0.1,1433;Database=DotNetLab.Database;User Id=sa;Password=YourStrong@Passw0rd;MultipleActiveResultSets=true;TrustServerCertificate=true"
+        // "Logging__LogLevel__Default": "Debug"
       }
     },
     "https": {
