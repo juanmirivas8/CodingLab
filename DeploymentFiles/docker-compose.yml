@@ -6,8 +6,8 @@ services:
     container_name: dotnetlab-sqlserver
     environment:
       - ACCEPT_EULA=Y
-      - SA_PASSWORD=YourStrong@Passw0rd
-      - MSSQL_PID=Developer
+      - SA_PASSWORD=${SA_PASSWORD}
+      - MSSQL_PID=${MSSQL_PID}
     ports:
       - "1433:1433"
     volumes:
@@ -16,21 +16,57 @@ services:
     networks:
       - dotnetlab-network
 
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: dotnetlab-rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
+    ports:
+      - "5672:5672"   # AMQP protocol port
+      - "15672:15672" # Management UI
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    restart: unless-stopped
+    networks:
+      - dotnetlab-network
+
+  azurite:
+    image: mcr.microsoft.com/azure-storage/azurite:latest
+    container_name: dotnetlab-azurite
+    hostname: azurite
+    command: "azurite --blobHost 0.0.0.0 --queueHost 0.0.0.0 --tableHost 0.0.0.0 --loose"
+    ports:
+      - "10000:10000" # Blob service
+      - "10001:10001" # Queue service
+      - "10002:10002" # Table service
+    volumes:
+      - azurite_data:/data
+    restart: unless-stopped
+    networks:
+      - dotnetlab-network
+
   api:
     image: dotnetlab-api:latest
     container_name: dotnetlab-api
     environment:
-      - ASPNETCORE_ENVIRONMENT=Docker
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+      - ConnectionStrings__DefaultConnection=${ConnectionStrings__DefaultConnection}
     ports:
       - "8080:8080"
     restart: unless-stopped
     depends_on:
       - sqlserver
+      - rabbitmq
     networks:
       - dotnetlab-network
 
 volumes:
   sqlserver_data:
+    driver: local
+  rabbitmq_data:
+    driver: local
+  azurite_data:
     driver: local
 
 networks:
