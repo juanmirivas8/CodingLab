@@ -6,6 +6,7 @@
         <OutputType>Exe</OutputType>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <UserSecretsId>dotnetlab-function-secrets-67890</UserSecretsId>
     </PropertyGroup>
 
     <ItemGroup>

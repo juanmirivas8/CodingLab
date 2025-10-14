@@ -15,7 +15,9 @@ Este documento explica cómo configurar correctamente los secrets y variables de
 
 **User Secrets** es una característica de .NET que almacena información sensible FUERA del código fuente, en tu perfil de usuario de Windows.
 
-#### Paso 1: Inicializar User Secrets
+#### Configuración para MinimalAPI.Host
+
+##### Paso 1: Inicializar User Secrets
 
 Abre una terminal en el directorio del proyecto `DotNetLab.MinimalAPI.Host` y ejecuta:
 
@@ -23,35 +25,64 @@ Abre una terminal en el directorio del proyecto `DotNetLab.MinimalAPI.Host` y ej
 dotnet user-secrets init
 ```
 
-#### Paso 2: Agregar tu Connection String
+##### Paso 2: Agregar tu Connection String
 
 ```cmd
 dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Server=127.0.0.1,1433;Database=DotNetLab.Database;User Id=sa;Password=TU_PASSWORD_AQUI;MultipleActiveResultSets=true;TrustServerCertificate=true"
 ```
 
-#### Paso 3: Ver tus secrets (opcional)
+##### Paso 3: Ver tus secrets (opcional)
 
 ```cmd
 dotnet user-secrets list
 ```
 
-#### Paso 4: Eliminar un secret (opcional)
+##### Paso 4: Eliminar un secret (opcional)
 
 ```cmd
 dotnet user-secrets remove "ConnectionStrings:DefaultConnection"
 ```
 
-#### Paso 5: Limpiar todos los secrets (opcional)
+##### Paso 5: Limpiar todos los secrets (opcional)
 
 ```cmd
 dotnet user-secrets clear
 ```
 
+#### Configuración para NotificationFunction (Azure Function)
+
+##### Paso 1: Navegar al directorio del proyecto
+
+```cmd
+cd C:\Users\Juan Rivas Velasco\Desktop\DotNetLab\DotNetLab.NotificationFunction
+```
+
+##### Paso 2: Agregar RabbitMQ Connection String
+
+```cmd
+dotnet user-secrets set "RabbitMQConnection" "amqp://guest:guest@localhost:5672"
+```
+
+##### Paso 3: Ver tus secrets (opcional)
+
+```cmd
+dotnet user-secrets list
+```
+
+**Nota**: Para Azure Functions, los secrets se configuran de manera plana (sin jerarquía de objetos), directamente como aparecen en `local.settings.json` → `Values`.
+
 ### ¿Dónde se almacenan?
 
 Los User Secrets se guardan en:
+
+**MinimalAPI.Host:**
 ```
 %APPDATA%\Microsoft\UserSecrets\dotnetlab-api-secrets-12345\secrets.json
+```
+
+**NotificationFunction:**
+```
+%APPDATA%\Microsoft\UserSecrets\dotnetlab-function-secrets-67890\secrets.json
 ```
 
 **Este archivo NUNCA se sube a Git** porque está fuera del proyecto.
@@ -173,4 +204,3 @@ Si encuentras formas de mejorar la seguridad de este proyecto, por favor:
 1. Abre un issue
 2. Propón una solución
 3. Mantén las mejores prácticas de seguridad
-
