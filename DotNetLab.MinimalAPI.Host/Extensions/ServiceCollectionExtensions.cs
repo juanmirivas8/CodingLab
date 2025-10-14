@@ -1,5 +1,6 @@
 ﻿using DotNetLab.Services.Interfaces;
 using DotNetLab.Services.Implementation;
+using DotNetLab.Services.Extensions;
 using DotNetLab.Data.Context;
 using DotNetLab.Data.Repositories.Interfaces;
 using DotNetLab.Data.Repositories.Implementation;
@@ -22,7 +23,13 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IUserRepository, UserRepository>();
         
-        // Add Services
+        // Add RabbitMQ configuration
+        services.Configure<RabbitMqOptions>(configuration.GetSection("RabbitMq"));
+        services.Configure<RabbitMqInfrastructureConfiguration>(configuration.GetSection("RabbitMq:Infrastructure"));
+        
+        // Add all RabbitMQ services (publisher, consumer, infrastructure)
+        services.AddRabbitMqServices();
+        
         services.AddScoped<IUserService, UserService>();
         
         // Add health checks with database connectivity check

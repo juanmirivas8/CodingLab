@@ -52,6 +52,8 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
       - ConnectionStrings__DefaultConnection=${ConnectionStrings__DefaultConnection}
+      - RabbitMq__UserName=${RabbitMq__UserName}
+      - RabbitMq__Password=${RabbitMq__Password}
     ports:
       - "8080:8080"
     restart: unless-stopped

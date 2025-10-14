@@ -11,4 +11,9 @@
       <ProjectReference Include="..\DotNetLab.Data\DotNetLab.Data.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.9" />
+      <PackageReference Include="RabbitMQ.Client" Version="7.1.2" />
+    </ItemGroup>
+
 </Project>
