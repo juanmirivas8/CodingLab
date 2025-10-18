@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetLab.Services", "DotNe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetLab.Data", "DotNetLab.Data\DotNetLab.Data.csproj", "{4A7A9F1F-5196-439B-A751-5B1920459DC8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetLab.NotificationFunction", "DotNetLab.NotificationFunction\DotNetLab.NotificationFunction.csproj", "{1F84C34A-DF36-484C-9F48-01AEC07E50E9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,6 +38,10 @@ Global
 		{4A7A9F1F-5196-439B-A751-5B1920459DC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4A7A9F1F-5196-439B-A751-5B1920459DC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4A7A9F1F-5196-439B-A751-5B1920459DC8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1F84C34A-DF36-484C-9F48-01AEC07E50E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F84C34A-DF36-484C-9F48-01AEC07E50E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F84C34A-DF36-484C-9F48-01AEC07E50E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F84C34A-DF36-484C-9F48-01AEC07E50E9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 	EndGlobalSection
