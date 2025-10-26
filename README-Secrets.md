@@ -30,6 +30,12 @@ dotnet user-secrets init
 ```cmd
 dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Server=127.0.0.1,1433;Database=DotNetLab.Database;User Id=sa;Password=TU_PASSWORD_AQUI;MultipleActiveResultSets=true;TrustServerCertificate=true"
 ```
+```cmd
+dotnet user-secrets set "RabbitMq:UserName" "guest"
+```
+```cmd
+dotnet user-secrets set "RabbitMq:Password" "guest"
+```
 
 ##### Paso 3: Ver tus secrets (opcional)
 

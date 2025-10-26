@@ -2,10 +2,11 @@
 using DotNetLab.Model.IntegrationEvents;
 using DotNetLab.Services.Interfaces;
 using DotNetLab.Data.Repositories.Interfaces;
+using Microsoft.Extensions.Logging;
 
 namespace DotNetLab.Services.Implementation;
 
-public class UserService(IUnitOfWork unitOfWork, IMessageBus messageBus): IUserService
+public class UserService(IUnitOfWork unitOfWork, IMessageBus messageBus, ILogger<UserService> logger): IUserService
 {
 
     public async Task<IEnumerable<User>> GetAllUsersAsync()
@@ -34,6 +35,7 @@ public class UserService(IUnitOfWork unitOfWork, IMessageBus messageBus): IUserS
         await unitOfWork.SaveChangesAsync();
         
         // Publish integration event
+        logger.LogInformation("User created with ID: {UserId}", user.Id);
         await messageBus.PublishAsync(
             exchange: "user.events",
             routingKey: "user.created",
