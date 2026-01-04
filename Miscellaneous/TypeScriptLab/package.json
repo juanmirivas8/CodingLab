@@ -1,20 +1,19 @@
-﻿{
+{
   "name": "typescript-lab",
   "version": "1.0.0",
   "description": "A simple web page for learning and testing TypeScript",
   "scripts": {
-    "build": "tsc",
-    "watch": "tsc --watch",
-    "dev": "tsc && npm run serve",
-    "serve": "echo 'Servidor de desarrollo iniciado. Abre http://localhost:8080 en tu navegador' && npx http-server -p 8080 -o",
-    "start": "npm run dev"
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "start": "vite"
   },
   "keywords": ["typescript", "learning"],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "typescript": "^5.3.0",
-    "http-server": "^14.1.1"
+    "vite": "^5.0.0"
   }
 }
 

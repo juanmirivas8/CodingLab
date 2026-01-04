@@ -1,0 +1,46 @@
+﻿/* CSS Variables for theming and consistency */
+:root {
+    /* Colors */
+    --color-primary: #667eea;
+    --color-secondary: #764ba2;
+    --color-success: #28a745;
+    --color-error: #dc3545;
+    --color-info: #667eea;
+    
+    --color-text-primary: #333;
+    --color-text-secondary: #666;
+    --color-border: #ddd;
+    --color-background-light: #f8f9fa;
+    --color-background-white: #ffffff;
+    --color-background-hover: #f0f0f0;
+    
+    /* Spacing */
+    --spacing-xs: 5px;
+    --spacing-sm: 10px;
+    --spacing-md: 15px;
+    --spacing-lg: 20px;
+    --spacing-xl: 30px;
+    --spacing-xxl: 40px;
+    
+    /* Border Radius */
+    --border-radius-sm: 5px;
+    --border-radius-md: 8px;
+    --border-radius-lg: 10px;
+    
+    /* Transitions */
+    --transition-fast: 0.2s;
+    --transition-normal: 0.3s;
+    
+    /* Shadows */
+    --shadow-light: 0 10px 40px rgba(0, 0, 0, 0.3);
+    
+    /* Font Sizes */
+    --font-size-sm: 14px;
+    --font-size-md: 18px;
+    --font-size-lg: 32px;
+    
+    /* Game Board */
+    --cell-size: 80px;
+    --grid-gap: 5px;
+}
+
