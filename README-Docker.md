@@ -1,85 +1,83 @@
 ﻿# DotNetLab Docker Deployment
 
-This document explains how to run the DotNetLab MinimalAPI application using Docker containers.
+This document explains how to run DotNetLab with a separated Docker Compose structure:
+
+- Core stack (`sqlserver`, `rabbitmq`, `azurite`, `aspire-dashboard`, `api`)
+- AI stack (`ollama`, `open-webui`)
+
+Compose files are located in `DeploymentFiles`:
+
+- `DeploymentFiles/docker-compose.core.yml`
+- `DeploymentFiles/docker-compose.ai.yml`
+- `DeploymentFiles/docker-compose.yml` (original full stack file)
 
 ## Prerequisites
 
 - Docker Desktop installed and running
 - .NET 9.0 SDK (for local development)
 
-## Quick Start
+## One-time setup
 
-1. Navigate to the deployment directory:
-   ```cmd
-   cd DeploymentFiles
-   ```
+Create the shared network used by both stacks:
 
-2. Build and start all services:
-   ```cmd
-   docker-compose up --build
-   ```
-
-3. The application will be available at:
-   - API: http://localhost:8080
-   - Swagger UI: http://localhost:8080/swagger
-   - SQL Server: localhost:1433
-
-## Services
-
-### SQL Server
-- **Container**: dotnetlab-sqlserver
-- **Port**: 1433
-- **Username**: sa
-- **Password**: YourStrong@Passw0rd
-- **Database**: DotNetLab.Database
-
-### MinimalAPI
-- **Container**: dotnetlab-api
-- **Port**: 8080
-- **Health Check**: http://localhost:8080/health
-- **Swagger**: http://localhost:8080/swagger
-
-## Commands
-
-### Start services in background:
-```cmd
-docker-compose up -d
+```powershell
+Set-Location "C:\Users\Juan Rivas Velasco\Desktop\DotNetLab\DeploymentFiles"
+docker network create dotnetlab-shared
 ```
 
-### Stop services:
-```cmd
-docker-compose down
+If the network already exists, Docker will return an "already exists" message and you can continue.
+
+## Start stacks independently
+
+Run only the core services:
+
+```powershell
+Set-Location "C:\Users\Juan Rivas Velasco\Desktop\DotNetLab\DeploymentFiles"
+docker compose -p dotnetlab-core -f .\docker-compose.core.yml up -d
 ```
 
-### View logs:
-```cmd
-docker-compose logs -f api
-docker-compose logs -f sqlserver
+Run only the AI services:
+
+```powershell
+Set-Location "C:\Users\Juan Rivas Velasco\Desktop\DotNetLab\DeploymentFiles"
+docker compose -p dotnetlab-ai -f .\docker-compose.ai.yml up -d
 ```
 
-### Rebuild API container:
-```cmd
-docker-compose build api
-docker-compose up -d api
+## Start both stacks together
+
+```powershell
+Set-Location "C:\Users\Juan Rivas Velasco\Desktop\DotNetLab\DeploymentFiles"
+docker compose -p dotnetlab -f .\docker-compose.core.yml -f .\docker-compose.ai.yml up -d
 ```
 
-## Health Checks
+## Stop stacks
 
-The API includes health checks that verify:
-- Application is running
-- Database connectivity
+```powershell
+Set-Location "C:\Users\Juan Rivas Velasco\Desktop\DotNetLab\DeploymentFiles"
+docker compose -p dotnetlab-core -f .\docker-compose.core.yml down
+docker compose -p dotnetlab-ai -f .\docker-compose.ai.yml down
+```
 
-Access health status at: http://localhost:8080/health
+## Services and endpoints
 
-## Environment Configuration
+- API: `http://localhost:8080`
+- Swagger: `http://localhost:8080/swagger`
+- SQL Server: `localhost:1433`
+- RabbitMQ Management UI: `http://localhost:15672`
+- Aspire Dashboard: `http://localhost:18888`
+- Ollama API: `http://localhost:11434`
+- Open WebUI: `http://localhost:3000`
 
-The application uses different configuration files:
-- `appsettings.json` - Local development
-- `appsettings.Docker.json` - Docker environment
-- Environment variables in docker-compose override connection strings
+## Logs
 
-## Troubleshooting
+```powershell
+Set-Location "C:\Users\Juan Rivas Velasco\Desktop\DotNetLab\DeploymentFiles"
+docker compose -p dotnetlab-core -f .\docker-compose.core.yml logs -f api
+docker compose -p dotnetlab-ai -f .\docker-compose.ai.yml logs -f open-webui
+```
 
-1. **SQL Server connection issues**: Wait for the SQL Server container to be fully healthy before the API starts
-2. **Port conflicts**: Ensure ports 8080 and 1433 are not in use by other applications
-3. **Build issues**: Try `docker-compose build --no-cache` to force rebuild
+## Notes
+
+- Current environment values are read from `DeploymentFiles/.env` by default.
+- The core compose fixes the telemetry variable typo to `OTEL_EXPORTER_OTLP_PROTOCOL`.
+- If you do not use an NVIDIA GPU, remove the `devices` section in `DeploymentFiles/docker-compose.ai.yml`.

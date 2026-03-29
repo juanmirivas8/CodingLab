@@ -1,0 +1,94 @@
+﻿version: '3.8'
+
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: dotnetlab-sqlserver
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=${SA_PASSWORD}
+      - MSSQL_PID=${MSSQL_PID}
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    restart: unless-stopped
+    networks:
+      - dotnetlab-shared
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: dotnetlab-rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    restart: unless-stopped
+    networks:
+      - dotnetlab-shared
+
+  azurite:
+    image: mcr.microsoft.com/azure-storage/azurite:latest
+    container_name: dotnetlab-azurite
+    hostname: azurite
+    command: "azurite --blobHost 0.0.0.0 --queueHost 0.0.0.0 --tableHost 0.0.0.0 --loose"
+    ports:
+      - "10000:10000"
+      - "10001:10001"
+      - "10002:10002"
+    volumes:
+      - azurite_data:/data
+    restart: unless-stopped
+    networks:
+      - dotnetlab-shared
+
+  aspire-dashboard:
+    image: mcr.microsoft.com/dotnet/aspire-dashboard:13
+    container_name: aspire-dashboard
+    ports:
+      - "18888:18888"
+      - "18889:18889"
+    environment:
+      - DOTNET_DASHBOARD_UNSECURED_ALLOW_ANONYMOUS=true
+      - ASPNETCORE_URLS=http://+:18888
+      - DOTNET_DASHBOARD_OTLP_ENDPOINT_URL=http://+:18889
+      - DOTNET_DASHBOARD_OTLP_HTTP_ENDPOINT_URL=http://+:18890
+    restart: unless-stopped
+    networks:
+      - dotnetlab-shared
+
+  api:
+    image: dotnetlab-api:latest
+    container_name: dotnetlab-api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+      - ConnectionStrings__DefaultConnection=${ConnectionStrings__DefaultConnection}
+      - RabbitMq__UserName=${RabbitMq__UserName}
+      - RabbitMq__Password=${RabbitMq__Password}
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://aspire-dashboard:18889
+      - OTEL_EXPORTER_OTLP_PROTOCOL=grpc
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+    depends_on:
+      - sqlserver
+      - rabbitmq
+    networks:
+      - dotnetlab-shared
+
+volumes:
+  sqlserver_data:
+    driver: local
+  rabbitmq_data:
+    driver: local
+  azurite_data:
+    driver: local
+
+networks:
+  dotnetlab-shared:
+    driver: bridge
+

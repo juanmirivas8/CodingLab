@@ -1,5 +1,5 @@
-﻿# Use the official .NET 9.0 SDK image for building
-FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build-env
+﻿# Use the official .NET 10.0 SDK image for building
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build-env
 WORKDIR /app
 
 # Copy only solution file first
@@ -23,8 +23,8 @@ COPY DotNetLab.Services/. ./DotNetLab.Services/
 # Build and publish the application
 RUN dotnet publish DotNetLab.MinimalAPI.Host/DotNetLab.MinimalAPI.Host.csproj -c Release -o out --no-restore
 
-# Use the official .NET 9.0 runtime image for running
-FROM mcr.microsoft.com/dotnet/aspnet:9.0
+# Use the official .NET 10.0 runtime image for running
+FROM mcr.microsoft.com/dotnet/aspnet:10.0
 WORKDIR /app
 
 # Copy the built application
