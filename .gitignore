@@ -172,11 +172,6 @@ publish/
 *.pubxml
 *.publishproj
 
-# Microsoft Azure Web App publish settings. Comment the next line if you want to
-# checkin your Azure Web App publish settings, but sensitive information contained
-# in these files may be visible to others.
-*.azurePubxml
-
 # NuGet Packages
 *.nupkg
 # NuGet Symbol Packages
@@ -284,10 +279,6 @@ node_modules/
 # Visual Studio 6 workspace and project file (working project files containing files to include in project)
 *.dsw
 *.dsp
-
-# Visual Studio 6 technical files
-*.ncb
-*.aps
 
 # Visual Studio LightSwitch build output
 **/*.HTMLClient/GeneratedArtifacts
@@ -451,15 +442,10 @@ fabric.properties
 # ====================
 
 # Database Project specific files
-*.dbmdl
-*.jfm
 *.dacpac
 *.sqlproj.user
 *.sqlsuo
 *.sqldeployment
-
-# SQL Server Data Tools (SSDT)
-*.sqlproj.user
 
 # SQL Server Management Studio Backup files
 *.bak
@@ -495,7 +481,6 @@ Icon
 .VolumeIcon.icns
 
 # Linux
-*~
 .fuse_hidden*
 .directory
 .Trash-*
@@ -513,5 +498,8 @@ Icon
 # .env.production.local
 
 # Temporary files
-*.tmp
 *.temp
+
+# Ignore AI plugin local caches and user session histories
+.junie/
+.ai/
