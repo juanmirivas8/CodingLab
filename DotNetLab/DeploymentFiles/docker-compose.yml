@@ -17,7 +17,7 @@ services:
       - dotnetlab-network
 
   rabbitmq:
-    image: rabbitmq:3-management
+    image: docker.io/library/rabbitmq:latest
     container_name: dotnetlab-rabbitmq
     environment:
       - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
@@ -79,36 +79,6 @@ services:
       - rabbitmq
     networks:
       - dotnetlab-network
-        
-  ollama:
-    image: ollama/ollama:latest
-    container_name: ollama
-    ports:
-      - "11434:11434"
-    environment:
-      - OLLAMA_HOST=0.0.0.0
-      - OLLAMA_ORIGINS=*
-    volumes:
-      - ollama_data:/root/.ollama
-    devices:
-      - "nvidia.com/gpu=all"
-    restart: unless-stopped
-    networks:
-      - dotnetlab-network
-  
-  open-webui:
-    image: ghcr.io/open-webui/open-webui:main
-    container_name: open-webui
-    ports:
-      - "3000:8080"
-    environment:
-      - OLLAMA_BASE_URL=http://ollama:11434
-    volumes:
-      - open-webui_data:/app/backend/data
-    networks:
-      - dotnetlab-network
-    depends_on:
-      - ollama
 
 volumes:
   sqlserver_data:
@@ -116,10 +86,6 @@ volumes:
   rabbitmq_data:
     driver: local
   azurite_data:
-    driver: local
-  ollama_data:
-    driver: local
-  open-webui_data:
     driver: local
 
 networks:
