@@ -1,0 +1,10 @@
+<div class="playground-container">
+  <h2>Live Input Value: {{ textValue() }}</h2>
+  <input
+    type="text"
+    #mainInput
+    (input)="textValue.set(mainInput.value)"
+    placeholder="Type something here..."
+    class="main-input"
+  >
+</div>

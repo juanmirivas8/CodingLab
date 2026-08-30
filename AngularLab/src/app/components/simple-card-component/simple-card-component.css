@@ -1,0 +1,27 @@
+.card {
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  padding: 16px;
+  margin: 12px 0;
+  max-width: 400px;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.card-header h3 {
+  margin: 0 0 4px 0;
+  font-size: 1.2rem;
+  color: #333333;
+}
+
+.subtitle {
+  margin: 0 0 12px 0;
+  font-size: 0.9rem;
+  color: #666666;
+}
+
+.card-body {
+  font-size: 0.95rem;
+  color: #444444;
+}
