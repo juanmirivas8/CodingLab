@@ -500,6 +500,6 @@ Icon
 # Temporary files
 *.temp
 
-# Ignore AI plugin local caches and user session histories
-.junie/
-.ai/
+# Claude Code: personal, machine-local settings and notes (shared config in .claude/settings.json is committed)
+.claude/settings.local.json
+CLAUDE.local.md

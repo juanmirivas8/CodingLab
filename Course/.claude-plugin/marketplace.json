@@ -1,0 +1,14 @@
+{
+  "name": "codinglab",
+  "owner": {
+    "name": "Juan Miguel Rivas Velasco"
+  },
+  "description": "Local plugins for the CodingLab repository.",
+  "plugins": [
+    {
+      "name": "ts-angular-course",
+      "source": "./plugin",
+      "description": "Personal TypeScript + Angular course tutor with Angular CLI MCP integration."
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "$schema": "https://anthropic.com/claude-code/plugin.schema.json",
+  "name": "ts-angular-course",
+  "version": "0.1.0",
+  "description": "Personal TypeScript + Angular course: interactive tutor skill, Angular curriculum and exercise-review subagents, and the Angular CLI MCP server.",
+  "author": {
+    "name": "Juan Miguel Rivas Velasco"
+  },
+  "keywords": ["typescript", "angular", "learning", "tutor"]
+}
