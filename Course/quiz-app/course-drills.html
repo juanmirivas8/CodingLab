@@ -1,0 +1,573 @@
+<title>TypeScript &amp; Angular Drills</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one phone-width column; a quiz is one question per screen with a sticky progress rail. */
+:root {
+  --bg: #f3f6fa;
+  --surface: #ffffff;
+  --sunken: #e8eef5;
+  --fg: #142033;
+  --muted: #56657a;
+  --line: #d3dce7;
+  --ts: #2f6fb8;          /* TypeScript track */
+  --ts-soft: #dfeaf7;
+  --ng: #c4173a;          /* Angular track */
+  --ng-soft: #f8e1e6;
+  --ok: #1f7a4d;
+  --ok-soft: #dcf1e5;
+  --bad: #b3261e;
+  --bad-soft: #f9e0de;
+  --warn: #8a5a00;
+  --warn-soft: #f6ead0;
+  --code-bg: #0f1a2b;
+  --code-fg: #dbe5f2;
+  --code-kw: #8fb8ff;
+  --code-str: #b5e3a1;
+  --code-num: #f2c58a;
+  --code-com: #7d8ba1;
+  --font-display: "Sora", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+  --radius: 10px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1420; --surface: #152033; --sunken: #1b283d; --fg: #e3eaf4; --muted: #9aa8bd; --line: #2a3a52;
+    --ts: #7fb0ec; --ts-soft: #1c3352; --ng: #f2708a; --ng-soft: #3d1a24;
+    --ok: #6fd19b; --ok-soft: #173627; --bad: #f28b82; --bad-soft: #3d1c1a; --warn: #e8c068; --warn-soft: #362a10;
+    --code-bg: #08101c; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1420; --surface: #152033; --sunken: #1b283d; --fg: #e3eaf4; --muted: #9aa8bd; --line: #2a3a52;
+  --ts: #7fb0ec; --ts-soft: #1c3352; --ng: #f2708a; --ng-soft: #3d1a24;
+  --ok: #6fd19b; --ok-soft: #173627; --bad: #f28b82; --bad-soft: #3d1c1a; --warn: #e8c068; --warn-soft: #362a10;
+  --code-bg: #08101c; color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--fg);
+  font: 16px/1.55 var(--font-body);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 48px;
+}
+.wrap { max-width: 640px; margin: 0 auto; display: grid; gap: 20px; }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; letter-spacing: -0.01em; }
+h1 { font-size: 1.6rem; font-weight: 700; }
+h2 { font-size: 1.05rem; font-weight: 600; }
+p { margin: 0; }
+.muted { color: var(--muted); }
+.mono { font-family: var(--font-mono); }
+.eyebrow { font: 600 0.72rem/1 var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+button { font: inherit; color: inherit; cursor: pointer; }
+button:focus-visible, summary:focus-visible { outline: 3px solid var(--ts); outline-offset: 2px; }
+button[disabled] { cursor: not-allowed; opacity: 0.5; }
+
+header.top { display: flex; justify-content: space-between; align-items: end; gap: 12px; padding-top: 20px; flex-wrap: wrap; }
+.btn { border: 1px solid var(--line); background: var(--surface); border-radius: var(--radius); padding: 10px 16px; font-weight: 700; }
+.btn.primary { background: var(--ts); border-color: var(--ts); color: var(--surface); }
+.btn.small { padding: 6px 10px; font-size: 0.85rem; }
+.btn.ghost { background: transparent; }
+
+/* Summary */
+.summary { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; display: grid; gap: 14px; }
+.stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.stat b { display: block; font: 700 1.5rem/1.1 var(--font-display); font-variant-numeric: tabular-nums; }
+.stat span { font-size: 0.8rem; color: var(--muted); }
+
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { font-size: 0.82rem; padding: 4px 10px; border-radius: 999px; background: var(--sunken); border: 1px solid var(--line); }
+.chip.weak { background: var(--warn-soft); border-color: transparent; color: var(--warn); }
+
+/* Lessons */
+.track { display: grid; gap: 8px; }
+.lesson { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 10px; align-items: center;
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 10px 12px; }
+.lesson .id { font: 600 0.8rem/1 var(--font-mono); padding: 5px 7px; border-radius: 6px; }
+.id.ts { background: var(--ts-soft); color: var(--ts); }
+.id.ng { background: var(--ng-soft); color: var(--ng); }
+.lesson .title { min-width: 0; }
+.lesson .title p { font-size: 0.92rem; }
+.lesson .title small { color: var(--muted); font-size: 0.78rem; }
+.lesson .actions { display: flex; gap: 6px; }
+.pill { font: 600 0.68rem/1 var(--font-mono); text-transform: uppercase; letter-spacing: 0.05em; padding: 3px 6px; border-radius: 4px; margin-left: 6px; vertical-align: 1px; }
+.pill.done { background: var(--ok-soft); color: var(--ok); }
+.pill.progress { background: var(--ts-soft); color: var(--ts); }
+.pill.review { background: var(--warn-soft); color: var(--warn); }
+.pill.skipped, .pill.todo { background: var(--sunken); color: var(--muted); }
+details.upcoming summary { cursor: pointer; color: var(--muted); font-size: 0.9rem; padding: 6px 0; }
+details.upcoming .track { margin-top: 8px; }
+
+.attempt { display: flex; justify-content: space-between; gap: 12px; font-size: 0.9rem; padding: 8px 0; border-bottom: 1px solid var(--line); }
+.attempt:last-child { border-bottom: 0; }
+.attempt b { font-variant-numeric: tabular-nums; }
+
+.notice { background: var(--warn-soft); color: var(--warn); border-radius: var(--radius); padding: 12px 14px; font-size: 0.92rem; }
+.empty { background: var(--surface); border: 1px dashed var(--line); border-radius: var(--radius); padding: 22px; display: grid; gap: 8px; }
+
+/* Quiz */
+.rail { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); padding-block: 14px 10px; display: grid; gap: 8px; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+.rail-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.bar { height: 6px; background: var(--sunken); border-radius: 999px; overflow: hidden; }
+.bar i { display: block; height: 100%; background: var(--ts); transition: width .25s ease; }
+.qcard { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; display: grid; gap: 14px; }
+.qmeta { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.prompt { font-size: 1.08rem; font-weight: 700; }
+pre.code { margin: 0; background: var(--code-bg); color: var(--code-fg); border-radius: 8px; padding: 14px; overflow-x: auto;
+  font: 0.86rem/1.6 var(--font-mono); tab-size: 2; }
+pre.code .k { color: var(--code-kw); } pre.code .s { color: var(--code-str); } pre.code .n { color: var(--code-num); } pre.code .c { color: var(--code-com); font-style: italic; }
+.options { display: grid; gap: 10px; }
+.opt { text-align: left; display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 10px; align-items: start;
+  border: 1.5px solid var(--line); background: var(--surface); border-radius: var(--radius); padding: 12px 14px; min-height: 48px; }
+.opt .key { font: 600 0.85rem/28px var(--font-mono); text-align: center; border-radius: 6px; background: var(--sunken); height: 28px; }
+.opt .txt { padding-top: 2px; overflow-wrap: anywhere; }
+.opt .txt code { font-family: var(--font-mono); font-size: 0.9em; background: var(--sunken); padding: 1px 4px; border-radius: 4px; }
+.opt.unsure { border-style: dashed; color: var(--muted); }
+.opt:hover:not([disabled]) { border-color: var(--ts); }
+.opt.right { border-color: var(--ok); background: var(--ok-soft); }
+.opt.right .key { background: var(--ok); color: var(--surface); }
+.opt.wrong { border-color: var(--bad); background: var(--bad-soft); }
+.opt.wrong .key { background: var(--bad); color: var(--surface); }
+.opt[disabled] { opacity: 1; cursor: default; }
+.diag { border-radius: 8px; padding: 12px 14px; display: grid; gap: 6px; }
+.diag.ok { background: var(--ok-soft); }
+.diag.bad { background: var(--bad-soft); }
+.diag .line { font: 600 0.82rem/1.3 var(--font-mono); }
+.diag.ok .line { color: var(--ok); } .diag.bad .line { color: var(--bad); }
+.prompt code, .diag code { font-family: var(--font-mono); font-size: 0.9em; background: var(--sunken); padding: 1px 4px; border-radius: 4px; }
+.foot { display: flex; justify-content: flex-end; gap: 10px; flex-wrap: wrap; }
+
+/* Results */
+.score { display: flex; align-items: baseline; gap: 10px; }
+.score b { font: 700 3rem/1 var(--font-display); font-variant-numeric: tabular-nums; }
+.review-list { display: grid; gap: 8px; }
+.review-item { display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 8px; font-size: 0.92rem; }
+.review-item .mark { font-weight: 700; }
+.review-item .mark.ok { color: var(--ok); } .review-item .mark.bad { color: var(--bad); }
+.gen-status { font-size: 0.9rem; color: var(--muted); }
+.gen-status.err { color: var(--bad); }
+
+@media (prefers-reduced-motion: reduce) { .bar i { transition: none; } }
+@media (max-width: 420px) {
+  .lesson { grid-template-columns: auto minmax(0, 1fr); }
+  .lesson .actions { grid-column: 1 / -1; justify-content: flex-end; }
+}
+</style>
+
+<div class="wrap" id="app" aria-live="polite">
+  <header class="top">
+    <div>
+      <p class="eyebrow">CodingLab course</p>
+      <h1>TypeScript &amp; Angular Drills</h1>
+    </div>
+  </header>
+  <div class="empty">
+    <h2>Loading your question bank…</h2>
+    <p class="muted">Your questions, scores and spaced-repetition schedule load from this page's saved data.</p>
+  </div>
+</div>
+
+<script>
+(() => {
+  "use strict";
+
+  // ---------- constants ----------
+  const DAY = 86400000;
+  const LEITNER_DAYS = [0, 1, 3, 7, 16, 35]; // box -> days until due again
+  const QUIZ_SIZE = 8;
+  const STATUS = {
+    "✅": { key: "done", label: "done" },
+    "🟡": { key: "progress", label: "in progress" },
+    "🔁": { key: "review", label: "review" },
+    "⏭️": { key: "skipped", label: "skipped" },
+    "⬜": { key: "todo", label: "not started" },
+  };
+  const ACTIVE = new Set(["done", "progress", "review"]);
+
+  // ---------- state ----------
+  const S = {
+    db: null, user: null, sample: null, canWrite: false,
+    questions: new Map(), progress: new Map(), syllabus: null, attempts: [],
+    loaded: { questions: false, progress: false, syllabus: false },
+    stale: false, dbMissing: false, writeError: "",
+    view: "home", quiz: null, gen: { busy: false, msg: "", err: false, ctl: null },
+  };
+  const app = document.getElementById("app");
+
+  // ---------- helpers ----------
+  const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  // `inline code` in prompts, options and explanations
+  const rich = (s) => esc(s).replace(/`([^`]+)`/g, "<code>$1</code>");
+  const track = (id) => (String(id).startsWith("NG") ? "ng" : "ts");
+  const now = () => Date.now();
+  const shuffle = (a) => { const b = a.slice(); for (let i = b.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [b[i], b[j]] = [b[j], b[i]]; } return b; };
+
+  const KW = /\b(const|let|var|function|return|if|else|for|of|in|type|interface|class|extends|implements|constructor|private|public|protected|readonly|static|new|async|await|import|export|from|as|satisfies|keyof|typeof|infer|never|unknown|any|void|string|number|boolean|true|false|null|undefined|this|switch|case|default|throw|try|catch|enum|abstract|signal|computed|input|output|inject)\b/;
+  function highlight(code) {
+    const re = /(\/\/[^\n]*|\/\*[\s\S]*?\*\/)|("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|`(?:\\.|[^`\\])*`)|(\b\d+(?:\.\d+)?\b)|(\b[A-Za-z_$][\w$]*\b)/g;
+    let out = "", last = 0, m;
+    while ((m = re.exec(code))) {
+      out += esc(code.slice(last, m.index));
+      if (m[1]) out += `<span class="c">${esc(m[1])}</span>`;
+      else if (m[2]) out += `<span class="s">${esc(m[2])}</span>`;
+      else if (m[3]) out += `<span class="n">${esc(m[3])}</span>`;
+      else out += KW.test(m[4]) && m[4].length === m[4].match(KW)[0].length ? `<span class="k">${esc(m[4])}</span>` : esc(m[4]);
+      last = re.lastIndex;
+    }
+    return out + esc(code.slice(last));
+  }
+
+  function lessonInfo(id) {
+    const l = S.syllabus?.lessons?.find((x) => x.id === id);
+    const st = STATUS[l?.status] || STATUS["⬜"];
+    return { id, title: l?.title || id, status: st };
+  }
+  function isActiveLesson(id) {
+    return ACTIVE.has(lessonInfo(id).status.key) || id === S.syllabus?.current;
+  }
+  function dueAt(p) {
+    if (!p) return 0;
+    return (p.lastAt || 0) + LEITNER_DAYS[Math.min(p.box ?? 0, 5)] * DAY;
+  }
+  function dueQuestions() {
+    const t = now();
+    return [...S.questions.values()]
+      .filter((q) => isActiveLesson(q.lesson) && dueAt(S.progress.get(q.id)) <= t)
+      .sort((a, b) => (S.progress.get(a.id)?.box ?? -1) - (S.progress.get(b.id)?.box ?? -1) || dueAt(S.progress.get(a.id)) - dueAt(S.progress.get(b.id)));
+  }
+  function weakTopics() {
+    const m = new Map();
+    for (const [qid, p] of S.progress) {
+      if (!p.seen || (p.box ?? 0) > 1) continue;
+      const q = S.questions.get(qid);
+      const topic = q?.topic || p.topic;
+      if (topic) m.set(topic, (m.get(topic) || 0) + 1);
+    }
+    return [...m.entries()].sort((a, b) => b[1] - a[1]).slice(0, 8).map(([t]) => t);
+  }
+  function validQuestion(q) {
+    return q && typeof q.prompt === "string" && Array.isArray(q.options) && q.options.length >= 2 && q.options.length <= 5 &&
+      q.options.every((o) => typeof o === "string" && o.length > 0) &&
+      Number.isInteger(q.answer) && q.answer >= 0 && q.answer < q.options.length && typeof q.lesson === "string";
+  }
+
+  // ---------- rendering ----------
+  function render() {
+    if (S.view === "quiz") return renderQuiz();
+    if (S.view === "results") return renderResults();
+    renderHome();
+  }
+
+  function headerHtml(extra = "") {
+    return `<header class="top"><div><p class="eyebrow">CodingLab course</p><h1>TypeScript &amp; Angular Drills</h1></div>${extra}</header>`;
+  }
+
+  function renderHome() {
+    if (S.dbMissing) {
+      app.innerHTML = headerHtml() + `<div class="empty"><h2>Saved data isn't available here</h2>
+        <p class="muted">Open this page on claude.ai while signed in. Your question bank, scores and review schedule are stored with the page and load only there.</p></div>`;
+      return;
+    }
+    const ready = S.loaded.questions && S.loaded.progress;
+    if (!ready) {
+      app.innerHTML = headerHtml() + `<div class="empty"><h2>Loading your question bank…</h2>
+        <p class="muted">${S.stale ? "Your saved questions can't be reached yet. Check your connection; this page keeps trying." : "Fetching questions, scores and your review schedule."}</p></div>`;
+      return;
+    }
+
+    const due = dueQuestions();
+    const weak = weakTopics();
+    const last = S.attempts[0];
+    const current = S.syllabus?.current ? lessonInfo(S.syllabus.current) : null;
+    const lessons = S.syllabus?.lessons || [];
+    const counts = new Map();
+    for (const q of S.questions.values()) counts.set(q.lesson, (counts.get(q.lesson) || 0) + 1);
+
+    const row = (l) => {
+      const st = (STATUS[l.status] || STATUS["⬜"]);
+      const n = counts.get(l.id) || 0;
+      return `<div class="lesson">
+        <span class="id ${track(l.id)}">${esc(l.id)}</span>
+        <div class="title"><p>${esc(l.title)}<span class="pill ${st.key}">${st.label}</span></p>
+          <small>${n} question${n === 1 ? "" : "s"}</small></div>
+        <div class="actions">
+          <button class="btn small" data-act="lesson" data-id="${esc(l.id)}" ${n ? "" : "disabled"} aria-label="Quiz on ${esc(l.id)}">Quiz</button>
+          ${S.sample && S.canWrite ? `<button class="btn small ghost" data-act="gen" data-id="${esc(l.id)}" ${S.gen.busy ? "disabled" : ""} aria-label="Generate 5 new questions for ${esc(l.id)}">+5</button>` : ""}
+        </div></div>`;
+    };
+    const active = lessons.filter((l) => ACTIVE.has((STATUS[l.status] || STATUS["⬜"]).key) || l.id === S.syllabus?.current);
+    const upcoming = lessons.filter((l) => !active.includes(l));
+
+    app.innerHTML = headerHtml() + `
+      ${S.stale ? `<div class="notice">Showing saved copies; the latest data can't be reached right now.</div>` : ""}
+      ${S.writeError ? `<div class="notice">${esc(S.writeError)}</div>` : ""}
+      <section class="summary" aria-label="Today">
+        <div class="stats">
+          <div class="stat"><b>${due.length}</b><span>due for review</span></div>
+          <div class="stat"><b>${S.questions.size}</b><span>questions in bank</span></div>
+          <div class="stat"><b>${last ? `${last.correct}/${last.total}` : "—"}</b><span>last score</span></div>
+        </div>
+        ${current ? `<p class="muted">Current lesson: <span class="mono">${esc(current.id)}</span> ${esc(current.title)}</p>` : ""}
+        <div class="foot" style="justify-content:flex-start">
+          <button class="btn primary" data-act="due" ${due.length ? "" : "disabled"}>${due.length ? `Start review (${Math.min(due.length, QUIZ_SIZE)})` : "Nothing due right now"}</button>
+          ${last && last.items?.some((i) => !i.ok) ? `<button class="btn" data-act="missed">Retry last misses</button>` : ""}
+        </div>
+      </section>
+      ${weak.length ? `<section><h2>Weak topics</h2><div class="chips" style="margin-top:10px">${weak.map((t) => `<span class="chip weak">${esc(t)}</span>`).join("")}</div></section>` : ""}
+      ${S.gen.msg ? `<p class="gen-status ${S.gen.err ? "err" : ""}" role="status">${esc(S.gen.msg)} ${S.gen.busy ? `<button class="btn small ghost" data-act="stop">Stop</button>` : ""}</p>` : ""}
+      <section style="display:grid;gap:10px">
+        <h2>Your lessons</h2>
+        ${lessons.length ? `<div class="track">${active.map(row).join("") || `<p class="muted">No lessons started yet.</p>`}</div>
+        ${upcoming.length ? `<details class="upcoming"><summary>Upcoming lessons (${upcoming.length})</summary><div class="track">${upcoming.map(row).join("")}</div></details>` : ""}`
+        : `<p class="muted">The lesson list appears after your next desktop study session syncs it.</p>`}
+      </section>
+      ${S.attempts.length ? `<section><h2>Recent quizzes</h2><div style="margin-top:6px">${S.attempts.slice(0, 6).map((a) => `
+        <div class="attempt"><span>${esc(a.label || a.mode)} <span class="muted">· ${new Date(a.at).toLocaleDateString(undefined, { month: "short", day: "numeric" })}</span></span><b>${a.correct}/${a.total}</b></div>`).join("")}</div></section>` : ""}
+    `;
+  }
+
+  function renderQuiz() {
+    const z = S.quiz;
+    const q = z.items[z.i];
+    const pct = Math.round((z.i / z.items.length) * 100);
+    const keys = "ABCDEF";
+    const opts = q.order.map((orig, k) => {
+      let cls = "opt";
+      if (z.picked != null) {
+        if (orig === q.answer) cls += " right";
+        else if (k === z.picked) cls += " wrong";
+      }
+      return `<button class="${cls}" data-act="pick" data-k="${k}" ${z.picked != null ? "disabled" : ""}><span class="key">${keys[k]}</span><span class="txt">${rich(q.options[orig])}</span></button>`;
+    });
+    const unsureIdx = q.order.length;
+    opts.push(`<button class="opt unsure ${z.picked === unsureIdx ? "wrong" : ""}" data-act="pick" data-k="${unsureIdx}" ${z.picked != null ? "disabled" : ""}><span class="key">?</span><span class="txt">Not sure</span></button>`);
+
+    const ok = z.picked != null && q.order[z.picked] === q.answer;
+    const correctKey = keys[q.order.indexOf(q.answer)];
+    app.innerHTML = `
+      <div class="rail">
+        <div class="rail-row"><button class="btn small ghost" data-act="quit">✕ End quiz</button>
+          <span class="mono muted" style="font-size:.85rem">${z.i + 1} / ${z.items.length}</span></div>
+        <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="${z.items.length}" aria-valuenow="${z.i}"><i style="width:${pct}%"></i></div>
+      </div>
+      <article class="qcard">
+        <div class="qmeta"><span class="id ${track(q.lesson)} mono" style="font-size:.78rem;padding:4px 7px;border-radius:6px">${esc(q.lesson)}</span>
+          ${q.topic ? `<span class="muted" style="font-size:.85rem">${esc(q.topic)}</span>` : ""}</div>
+        <p class="prompt">${rich(q.prompt)}</p>
+        ${q.code ? `<pre class="code"><code>${highlight(q.code)}</code></pre>` : ""}
+        <div class="options" role="group" aria-label="Answers">${opts.join("")}</div>
+        ${z.picked != null ? `<div class="diag ${ok ? "ok" : "bad"}" role="status">
+            <span class="line">${ok ? "✓ tsc: 0 errors" : `✗ tsc: 1 error · answer ${correctKey}`}</span>
+            <p>${rich(q.explain || "")}</p></div>
+          <div class="foot"><button class="btn primary" data-act="next" id="next-btn">${z.i + 1 < z.items.length ? "Next question" : "See results"}</button></div>` : ""}
+      </article>`;
+    if (z.picked != null) document.getElementById("next-btn")?.focus({ preventScroll: true });
+  }
+
+  function renderResults() {
+    const z = S.quiz;
+    const correct = z.results.filter((r) => r.ok).length;
+    const missed = z.results.filter((r) => !r.ok);
+    const topics = [...new Set(missed.map((r) => r.topic).filter(Boolean))];
+    app.innerHTML = headerHtml() + `
+      <section class="summary">
+        <p class="eyebrow">${esc(z.label)}</p>
+        <div class="score"><b>${correct}/${z.results.length}</b><span class="muted">${correct === z.results.length ? "Clean build." : `${missed.length} to review`}</span></div>
+        ${topics.length ? `<div class="chips">${topics.map((t) => `<span class="chip weak">${esc(t)}</span>`).join("")}</div>` : ""}
+        ${S.writeError ? `<div class="notice">${esc(S.writeError)}</div>` : ""}
+        <div class="foot" style="justify-content:flex-start">
+          ${missed.length ? `<button class="btn primary" data-act="missed">Retry misses</button>` : ""}
+          ${missed.length && S.sample && S.canWrite ? `<button class="btn" data-act="more" ${S.gen.busy ? "disabled" : ""}>5 more like these</button>` : ""}
+          <button class="btn ghost" data-act="home">Back to lessons</button>
+        </div>
+        ${S.gen.msg ? `<p class="gen-status ${S.gen.err ? "err" : ""}" role="status">${esc(S.gen.msg)} ${S.gen.busy ? `<button class="btn small ghost" data-act="stop">Stop</button>` : ""}</p>` : ""}
+      </section>
+      <section class="review-list" aria-label="Your answers">
+        ${z.results.map((r) => `<div class="review-item"><span class="mark ${r.ok ? "ok" : "bad"}">${r.ok ? "✓" : "✗"}</span>
+          <span><span class="mono muted" style="font-size:.8rem">${esc(r.lesson)}</span> ${rich(r.prompt)}</span></div>`).join("")}
+      </section>`;
+  }
+
+  // ---------- quiz flow ----------
+  function startQuiz(questions, label, mode, lesson) {
+    if (!questions.length) return;
+    const items = questions.slice(0, QUIZ_SIZE).map((q) => ({ ...q, order: shuffle(q.options.map((_, i) => i)) }));
+    S.quiz = { items, i: 0, picked: null, results: [], label, mode, lesson: lesson || null };
+    S.view = "quiz";
+    S.writeError = "";
+    render();
+    window.scrollTo({ top: 0 });
+  }
+
+  async function pick(k) {
+    const z = S.quiz;
+    if (z.picked != null) return;
+    z.picked = k;
+    const q = z.items[z.i];
+    const ok = k < q.order.length && q.order[k] === q.answer;
+    z.results.push({ qid: q.id, lesson: q.lesson, topic: q.topic || "", prompt: q.prompt, ok });
+    render();
+    if (!S.db || !S.canWrite) return;
+    const prev = S.progress.get(q.id) || {};
+    const next = {
+      lesson: q.lesson, topic: q.topic || "",
+      box: ok ? Math.min((prev.box ?? 0) + 1, 5) : 1,
+      seen: (prev.seen || 0) + 1, correct: (prev.correct || 0) + (ok ? 1 : 0),
+      lastOk: ok, lastAt: now(),
+    };
+    try { await S.db.collection("progress").doc(q.id).set(next); }
+    catch (e) { S.writeError = "Your answers can't be saved right now, so the review schedule won't update."; }
+  }
+
+  async function finishQuiz() {
+    const z = S.quiz;
+    S.view = "results";
+    render();
+    if (!S.db || !S.canWrite || !z.results.length) return;
+    const correct = z.results.filter((r) => r.ok).length;
+    try {
+      await S.db.collection("attempts").add({
+        at: now(), mode: z.mode, label: z.label, lesson: z.lesson, total: z.results.length, correct,
+        items: z.results.map((r) => ({ qid: r.qid, lesson: r.lesson, topic: r.topic, ok: r.ok })),
+      });
+    } catch (e) {
+      S.writeError = e?.code === "quota_exceeded" ? "Storage is full: old quiz results need clearing before new ones can be saved." : "This quiz's score couldn't be saved.";
+      render();
+    }
+  }
+
+  // ---------- question generation (asks Claude) ----------
+  async function generate(lessonIds, topics, count = 5) {
+    if (!S.sample || S.gen.busy) return;
+    const lessons = lessonIds.map(lessonInfo);
+    const existing = [...S.questions.values()].filter((q) => lessonIds.includes(q.lesson)).map((q) => "- " + q.prompt).slice(0, 40).join("\n");
+    const prompt = `You write quiz questions for a personal TypeScript + Angular (v22) course.
+The student is a beginner in TypeScript (level 2/10) with a strong C# / .NET background.
+Angular conventions: signals, input()/output()/model(), native @if/@for, inject(), @Service, Signal Forms, OnPush by default, no standalone: true.
+
+Write ${count} NEW multiple-choice questions for: ${lessons.map((l) => `${l.id} "${l.title}"`).join("; ")}.
+${topics.length ? `Focus on the topics the student just got wrong: ${topics.join(", ")}.` : ""}
+Mix question kinds: predict the output, spot the bug, which type does TypeScript infer, concept check. Where useful, compare with C#.
+Do not repeat these existing questions:
+${existing || "(none)"}
+
+Reply with only a JSON array. Each item:
+{"lesson":"<one of ${lessonIds.join(", ")}>","topic":"<2-4 word topic>","prompt":"<question; wrap identifiers in backticks>","code":"<optional TypeScript snippet, max 12 lines, or empty string>","options":["<3 or 4 short answers, no code blocks, inline identifiers in backticks>"],"answer":<0-based index of the correct option>,"explain":"<1-2 sentences why>"}
+Never put multi-line code in options. Exactly one option is correct.`;
+    S.gen = { busy: true, msg: "Asking Claude for new questions… (this can take up to a minute)", err: false, ctl: new AbortController() };
+    render();
+    try {
+      const arr = await S.sample.json(prompt, { signal: S.gen.ctl.signal, modelTier: "default" });
+      const list = (Array.isArray(arr) ? arr : []).map((q) => ({
+        lesson: lessonIds.includes(q?.lesson) ? q.lesson : lessonIds[0],
+        topic: String(q?.topic || "").slice(0, 60), prompt: String(q?.prompt || ""), code: String(q?.code || ""),
+        options: Array.isArray(q?.options) ? q.options.map(String) : [], answer: Number(q?.answer), explain: String(q?.explain || ""),
+      })).filter(validQuestion);
+      if (!list.length) throw { code: "invalid_json" };
+      const stamp = now().toString(36);
+      let saved = 0;
+      for (const [i, q] of list.entries()) {
+        await S.db.collection("questions").doc(`gen-${stamp}-${i}`).set({ ...q, source: "generated", createdAt: now() });
+        saved++;
+      }
+      S.gen = { busy: false, msg: `Added ${saved} new question${saved === 1 ? "" : "s"} to ${lessonIds.join(", ")}.`, err: false, ctl: null };
+    } catch (e) {
+      const msg = {
+        cancelled: "Stopped. No questions were added.",
+        not_granted: "Claude access wasn't allowed for this page, so new questions can't be generated.",
+        rate_limited: "Too many requests right now. Try again in a minute.",
+        invalid_json: "Claude's reply couldn't be read as questions. Try again.",
+        quota_exceeded: "Storage is full: delete some questions before adding more.",
+      }[e?.code] || "New questions couldn't be generated. Try again later.";
+      S.gen = { busy: false, msg, err: e?.code !== "cancelled", ctl: null };
+      if (e?.code === "not_granted") S.sample = null;
+    }
+    render();
+  }
+
+  // ---------- events ----------
+  app.addEventListener("click", (ev) => {
+    const b = ev.target.closest("button[data-act]");
+    if (!b || b.disabled) return;
+    const act = b.dataset.act;
+    if (act === "due") startQuiz(dueQuestions(), "Spaced review", "due");
+    else if (act === "lesson") {
+      const id = b.dataset.id;
+      const qs = [...S.questions.values()].filter((q) => q.lesson === id);
+      const byWeak = shuffle(qs).sort((a, c) => (S.progress.get(a.id)?.box ?? 0) - (S.progress.get(c.id)?.box ?? 0));
+      startQuiz(byWeak, `${id} · ${lessonInfo(id).title}`, "lesson", id);
+    } else if (act === "missed") {
+      const src = S.view === "results" ? S.quiz.results : (S.attempts[0]?.items || []);
+      const qs = src.filter((r) => !r.ok).map((r) => S.questions.get(r.qid)).filter(Boolean);
+      startQuiz(qs, "Retry misses", "missed");
+    } else if (act === "pick") pick(Number(b.dataset.k));
+    else if (act === "next") {
+      const z = S.quiz;
+      if (z.i + 1 < z.items.length) { z.i++; z.picked = null; render(); window.scrollTo({ top: 0 }); }
+      else finishQuiz();
+    } else if (act === "quit") { if (S.quiz.results.length) finishQuiz(); else { S.view = "home"; render(); } }
+    else if (act === "home") { S.view = "home"; S.gen.msg = ""; render(); }
+    else if (act === "gen") generate([b.dataset.id], []);
+    else if (act === "more") {
+      const missed = S.quiz.results.filter((r) => !r.ok);
+      generate([...new Set(missed.map((r) => r.lesson))], [...new Set(missed.map((r) => r.topic).filter(Boolean))]);
+    } else if (act === "stop") S.gen.ctl?.abort();
+  });
+  document.addEventListener("keydown", (ev) => {
+    if (S.view !== "quiz" || ev.metaKey || ev.ctrlKey || ev.altKey) return;
+    const k = "abcdef".indexOf(ev.key.toLowerCase());
+    const q = S.quiz.items[S.quiz.i];
+    if (S.quiz.picked == null && k >= 0 && k < q.order.length) pick(k);
+    else if (S.quiz.picked == null && ev.key === "?") pick(q.order.length);
+    else if (S.quiz.picked != null && ev.key === "Enter" && document.activeElement?.id !== "next-btn") document.getElementById("next-btn")?.click();
+  });
+
+  // ---------- data ----------
+  function subscribe() {
+    const db = S.db;
+    const timer = setTimeout(() => { S.stale = true; render(); }, 10000);
+    const settle = (snap) => { if (!snap.metadata.fromCache) { clearTimeout(timer); S.stale = false; } };
+    const onErr = () => { clearTimeout(timer); S.stale = true; render(); };
+
+    db.collection("questions").onSnapshot((snap) => {
+      S.questions = new Map(snap.docs.map((d) => [d.id, { id: d.id, ...d.data() }]).filter(([, q]) => validQuestion(q)));
+      S.loaded.questions = true; settle(snap); if (S.view === "home") render();
+    }, onErr);
+    db.collection("progress").onSnapshot((snap) => {
+      S.progress = new Map(snap.docs.map((d) => [d.id, d.data()]));
+      S.loaded.progress = true; if (S.view === "home") render();
+    }, onErr);
+    db.doc("meta/syllabus").onSnapshot((snap) => {
+      S.syllabus = snap.exists ? snap.data() : null;
+      S.loaded.syllabus = true; if (S.view === "home") render();
+    }, onErr);
+    db.collection("attempts").orderBy("at", "desc").limit(20).onSnapshot((snap) => {
+      S.attempts = snap.docs.map((d) => d.data());
+      if (S.view === "home") render();
+    }, onErr);
+  }
+
+  async function boot() {
+    const c = window.claude;
+    if (!c?.use) { S.dbMissing = true; render(); return; }
+    const [db, user, sample] = await Promise.all([c.use("db"), c.use("user"), c.use("sample")]);
+    if (!db) { S.dbMissing = true; render(); return; }
+    S.db = db; S.user = user; S.sample = sample;
+    if (!user) S.canWrite = true; // the platform said nothing: keep controls, a refused write decides
+    else {
+      const owner = await user.isOwner().catch(() => false);
+      const can = await user.can("data.write").catch(() => null);
+      S.canWrite = owner || can !== false;
+    }
+    subscribe();
+  }
+  render();
+  boot();
+})();
+</script>

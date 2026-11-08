@@ -1,0 +1,114 @@
+{
+  "ts00-any-unknown": {
+    "lesson": "TS-00", "topic": "any vs unknown",
+    "prompt": "In this snippet, which of the last two lines compile?",
+    "code": "let a: any = \"hi\";\nlet u: unknown = \"hi\";\na.toUpperCase();   // line 3\nu.toUpperCase();   // line 4",
+    "options": ["Both lines", "Only line 3, `a.toUpperCase()`", "Only line 4, `u.toUpperCase()`"],
+    "answer": 1,
+    "explain": "`any` switches type checking off, so anything goes. `unknown` forces you to narrow first (for example `if (typeof u === \"string\")`), which makes it the safe choice."
+  },
+  "ts00-literal-inference": {
+    "lesson": "TS-00", "topic": "literal inference",
+    "prompt": "Which types does TypeScript infer for `x` and `y`?",
+    "code": "const x = \"draft\";\nlet y = \"draft\";",
+    "options": ["`x: string`, `y: string`", "`x: \"draft\"`, `y: string`", "`x: \"draft\"`, `y: \"draft\"`"],
+    "answer": 1,
+    "explain": "A `const` can never change, so TypeScript keeps the exact literal type `\"draft\"`. A `let` can be reassigned, so it widens to `string`."
+  },
+  "ts00-parameter-property": {
+    "lesson": "TS-00", "topic": "parameter properties",
+    "prompt": "What does this constructor do?",
+    "code": "class Service {\n  constructor(private readonly logger: Logger) {}\n}",
+    "options": ["Declares a private readonly `logger` field and assigns the argument to it", "Only types the parameter; no field is created", "It's a syntax error: modifiers aren't allowed on parameters"],
+    "answer": 0,
+    "explain": "A parameter property is TypeScript shorthand for declaring and assigning a field in one go. C# 12 primary constructors are similar, but they don't create a readonly field for you."
+  },
+  "ts00-type-vs-interface": {
+    "lesson": "TS-00", "topic": "type vs interface",
+    "prompt": "Which statement about `type` and `interface` is true?",
+    "code": "",
+    "options": ["They're identical; only the syntax differs", "Two `interface X` declarations merge into one, and only `type` can be a union like `A | B`", "A `type` can't describe an object shape"],
+    "answer": 1,
+    "explain": "Interfaces support declaration merging. Type aliases can name any type, including unions, tuples and mapped types. For plain object shapes, either works."
+  },
+  "ts00-narrowing": {
+    "lesson": "TS-00", "topic": "discriminated unions",
+    "prompt": "Inside the `if`, what does TypeScript know about `s`?",
+    "code": "type Shape =\n  | { kind: \"circle\"; r: number }\n  | { kind: \"square\"; side: number };\n\nfunction area(s: Shape) {\n  if (s.kind === \"circle\") {\n    // here\n  }\n}",
+    "options": ["It's the circle type: `s.r` works, `s.side` is an error", "It's still `Shape`; you need `s as Circle` to read `r`", "It becomes `any` inside the `if`"],
+    "answer": 0,
+    "explain": "Checking the shared `kind` field narrows the union automatically, so no cast is needed. It's the TypeScript version of C# pattern matching, and it happens at compile time."
+  },
+  "ts00-keyof-generic": {
+    "lesson": "TS-00", "topic": "keyof generics",
+    "prompt": "Which signature makes `getProp(hero, \"name\")` return `string` and `getProp(hero, \"nope\")` a compile error?",
+    "code": "",
+    "options": ["`<T, K extends keyof T>(o: T, k: K): T[K]`", "`<T>(o: T, k: string): any`", "`(o: object, k: keyof object): unknown`"],
+    "answer": 0,
+    "explain": "`K extends keyof T` limits the key to the real property names of `T`, and the indexed access type `T[K]` returns that property's own type."
+  },
+  "ts00-event-loop": {
+    "lesson": "TS-00", "topic": "microtasks vs timers",
+    "prompt": "What does this print, in order?",
+    "code": "console.log(1);\nsetTimeout(() => console.log(2));\nPromise.resolve().then(() => console.log(3));\nconsole.log(4);",
+    "options": ["1 2 3 4", "1 4 2 3", "1 4 3 2"],
+    "answer": 2,
+    "explain": "Synchronous code runs first (1, 4). Then the microtask queue runs (promise callbacks: 3), and only then the next timer task (2)."
+  },
+  "ts00-partial-omit": {
+    "lesson": "TS-00", "topic": "utility types",
+    "prompt": "With `type Hero = { id: string; name: string; age: number }`, what is `A`?",
+    "code": "type A = Partial<Omit<Hero, \"id\">>;",
+    "options": ["`{ name?: string; age?: number }`", "`{ id?: string }`", "`{ id: string; name?: string; age?: number }`"],
+    "answer": 0,
+    "explain": "`Omit` removes `id` first, then `Partial` makes every remaining property optional."
+  },
+  "ts01-strict": {
+    "lesson": "TS-01", "topic": "tsconfig strict",
+    "prompt": "What does `\"strict\": true` in `tsconfig.json` do?",
+    "code": "",
+    "options": ["Turns on a family of stricter checks, such as `strictNullChecks` and `noImplicitAny`", "Only adds `\"use strict\"` to the emitted JavaScript", "Stops `tsc` from emitting any files"],
+    "answer": 0,
+    "explain": "`strict` is a switch for a group of checks. The most important ones are `strictNullChecks` (null must be handled) and `noImplicitAny` (no silent `any`)."
+  },
+  "ts01-tsc-role": {
+    "lesson": "TS-01", "topic": "tsc vs Vite",
+    "prompt": "TypeScriptLab's build script is `tsc && vite build`. What is `tsc`'s job there?",
+    "code": "",
+    "options": ["Type-check the project, so a type error stops the build", "Bundle the files for the browser", "Start the dev server on port 8080"],
+    "answer": 0,
+    "explain": "Vite does the bundling. `tsc` runs first as the type checker, and `&&` means Vite only runs when `tsc` finds no errors."
+  },
+  "ts01-vite-no-check": {
+    "lesson": "TS-01", "topic": "tsc vs Vite",
+    "prompt": "`npm run dev` still shows your page even though the code has a type error. Why?",
+    "code": "",
+    "options": ["Vite strips the types without type-checking them", "Type errors are only warnings in TypeScript", "The dev server uses a different tsconfig"],
+    "answer": 0,
+    "explain": "For speed, Vite transpiles each file by removing the types (with esbuild) and never checks them. Use `npm run build` or your editor to catch type errors."
+  },
+  "ts01-null-checks": {
+    "lesson": "TS-01", "topic": "strictNullChecks",
+    "prompt": "With `strict` on, does this function compile?",
+    "code": "function len(s: string | null) {\n  return s.length;\n}",
+    "options": ["Yes", "No: `s` is possibly `null`", "No: `string | null` isn't a valid type"],
+    "answer": 1,
+    "explain": "Under `strictNullChecks`, `null` is its own type, so you must narrow first: `return s?.length ?? 0` or an `if (s)` check. It's like C# nullable reference types, but as an error, not a warning."
+  },
+  "ts01-target": {
+    "lesson": "TS-01", "topic": "tsconfig target",
+    "prompt": "What does `\"target\": \"ES2020\"` in `tsconfig.json` control?",
+    "code": "",
+    "options": ["Which JavaScript version `tsc` emits, and which newer syntax it rewrites", "Which browsers Vite opens the page in", "Which TypeScript version gets installed"],
+    "answer": 0,
+    "explain": "`target` is the JavaScript language level of the output. Syntax newer than ES2020 gets downlevelled to something ES2020 engines understand."
+  },
+  "ts01-type-erasure": {
+    "lesson": "TS-01", "topic": "type erasure",
+    "prompt": "What does this print?",
+    "code": "type User = { name: string };\nconst u = JSON.parse('{\"nome\":\"Ana\"}') as User;\nconsole.log(u.name);",
+    "options": ["`Ana`", "`undefined`", "A runtime error, because the JSON doesn't match `User`"],
+    "answer": 1,
+    "explain": "Types are erased when the code runs, and `as` is only a promise to the compiler, not a check. Unlike a C# cast, nothing validates the object, so `u.name` is `undefined`."
+  }
+}

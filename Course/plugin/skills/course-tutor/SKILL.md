@@ -32,9 +32,22 @@ quizzes, warm-ups, "predict the output", confirmations and choices.
 - `Course/PROGRESS.md` — "Now" block (current lesson, experience level), review queue, session log (newest first).
 - `Course/lessons/<ID>-<slug>.md` — one note per lesson, copied from `Course/lessons/_TEMPLATE.md`.
 
+## Quiz app ("TypeScript & Angular Drills")
+
+The student drills on their phone in a published artifact: https://claude.ai/artifact/UUq2pg8EUf4PqRG97uoFHP
+(source `Course/quiz-app/course-drills.html`). Its database, read and written with the `ArtifactData` tool, holds:
+
+- `questions/<id>` — `{lesson, topic, prompt, code, options[], answer, explain, source}`. `answer` is a 0-based index.
+  Put code in `code`, never in `options`; wrap inline identifiers in backticks.
+- `progress/<question id>` — spaced-repetition state per question: `{box 0–5, seen, correct, lastOk, lastAt}`.
+- `attempts/<auto id>` — finished quizzes: `{at, label, total, correct, items[{qid, lesson, topic, ok}]}`.
+- `meta/syllabus` — `{lessons[{id, title, status}], current}`. The app only schedules reviews for active lessons.
+
 ## Start of every session
 
-1. Read `Course/PROGRESS.md` and `Course/SYLLABUS.md`.
+1. Read `Course/PROGRESS.md` and `Course/SYLLABUS.md`. Then query the quiz app's `attempts` collection for the
+   newest few documents (`order_by` `at` desc). Topics missed since the last session log entry go into the review queue
+   and the warm-up. Mention the last quiz score in one line.
 2. Say in two or three lines: where we are, the next lesson, and any 🔁 items in the review queue.
 3. Offer a 2–3 question warm-up on the review queue or the last lesson, then continue.
 
@@ -110,4 +123,9 @@ Subagents can't talk to the user. Give them everything they need in the prompt a
 2. Create or update the lesson note in `Course/lessons/`.
 3. Update the "Now" block and review queue in `PROGRESS.md`, and add a session-log entry at the top of the log
    (date, desktop|mobile, lesson IDs, did / code / struggled with / next).
-4. Offer to commit the course files and lesson code together (`Course: <ID> <title>`). Don't commit without a yes.
+4. Sync the quiz app:
+   - Run `python3 Course/quiz-app/sync_syllabus.py` into a scratch file and write it to `meta/syllabus`
+     (`ArtifactData` `set` with `file_path`, pinned with `if_version` from a `get`).
+   - Add the lesson's flashcards as 3–5 multiple-choice `questions` docs with ids like `ts03-<slug>`
+     (one `batch`, `source: "lesson"`), so they enter the spaced-repetition rotation.
+5. Offer to commit the course files and lesson code together (`Course: <ID> <title>`). Don't commit without a yes.
