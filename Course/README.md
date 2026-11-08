@@ -10,7 +10,8 @@ A personal, self-paced course that uses this repo's labs as its workspace:
 | [SYLLABUS.md](SYLLABUS.md) | Course structure: tracks, units, lesson IDs, status. |
 | [PROGRESS.md](PROGRESS.md) | Where I am now, the review queue, and the session log (past sessions). |
 | [lessons/](lessons/) | One note per lesson (goals, key ideas, my solution, flashcards). Start from `_TEMPLATE.md`. |
-| [CLAUDE_PROJECT.md](CLAUDE_PROJECT.md) | How to set up a claude.ai Project for studying on mobile. |
+| [CLAUDE_PROJECT.md](CLAUDE_PROJECT.md) | How to set up the claude.ai Project for studying on mobile. |
+| [PROJECT_INSTRUCTIONS.md](PROJECT_INSTRUCTIONS.md) | The tutor rules to paste into the claude.ai Project's instructions. |
 | [plugin/](plugin/) | The `ts-angular-course` Claude Code plugin: `course-tutor` skill, `ng-curriculum` and `exercise-reviewer` subagents, Angular CLI MCP. |
 | `.claude-plugin/marketplace.json` | Local `codinglab` marketplace that the repo's `.claude/settings.json` installs the plugin from. |
 
