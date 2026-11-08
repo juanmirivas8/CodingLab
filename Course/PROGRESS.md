@@ -12,7 +12,8 @@
 Concepts marked 🔁 in the syllabus, oldest first. A study session can start by
 quizzing these.
 
-- (empty: the TS-00 gaps are all covered by upcoming lessons)
+- Microtasks vs timers (missed twice in the quiz app; got it right in the 2026-11-08 warm-up). Revisit in TS-16.
+- `unknown` vs `any` (missed in the quiz app). Covered in TS-02.
 
 ## Session log
 
@@ -25,6 +26,12 @@ Newest first. One entry per study session, desktop or mobile.
 - **Struggled with:** …
 - **Next:** …
 -->
+
+### 2026-11-08 · desktop · quiz app fix
+- **Did:** Reviewed quiz results (TS-00 4/8, retry 3/4). Warm-up on event loop order: correct. Found that a quiz left early never saved an `attempts` doc (only progress); the app now saves the attempt after every answer.
+- **Code:** `Course/quiz-app/course-drills.html` (republished, uncommitted)
+- **Struggled with:** microtasks vs timers (quiz), `unknown` vs `any`.
+- **Next:** TS-01.
 
 ### 2026-11-08 · desktop · TS-00
 - **Did:** Placement check: 4 background questions and an 8-question quiz, scored 3/8. Set experience level to 2.

@@ -42,7 +42,7 @@ Each TypeScript block unlocks the concepts the next Angular block depends on.
 ### Unit 1 — Foundations
 | ID | Lesson | Status |
 |----|--------|--------|
-| TS-01 | Tooling: `tsc`, Vite, `tsconfig.json`, what `strict` turns on | ⬜ |
+| TS-01 | Tooling: `tsc`, Vite, `tsconfig.json`, what `strict` turns on | 🟡 |
 | TS-02 | Primitive types, inference, `any` vs `unknown` vs `never` | ⬜ |
 | TS-03 | Functions: parameter/return types, optional & default params, overloads, `void` | ⬜ |
 | TS-04 | Object types: `type` vs `interface`, optional & `readonly` properties | ⬜ |
