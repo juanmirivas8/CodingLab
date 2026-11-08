@@ -1,45 +1,33 @@
-# Claude Project setup (claude.ai — phone or browser)
+# Studying on claude.ai (phone or browser)
 
 Use this when you're away from the PC and can't reach a Claude Code session.
 
-## 1. Create the project
+Claude Code plugins don't run on claude.ai. Instead, the tutor's rules go into a claude.ai Project's
+instructions: [PROJECT_INSTRUCTIONS.md](PROJECT_INSTRUCTIONS.md). They follow the same course, teaching
+style and log format as the desktop tutor, without the build, the Angular MCP or file editing.
 
-claude.ai → Projects → New project, named **"TS + Angular Course"**.
+## 1. Create the project (once)
 
-## 2. Add knowledge files
+claude.ai → **Projects → New project**, named **"TS + Angular Course"**.
 
-The repo is on Azure DevOps, so claude.ai's GitHub sync can't pull it. Upload the files instead:
+- **Instructions:** paste everything in [PROJECT_INSTRUCTIONS.md](PROJECT_INSTRUCTIONS.md) except its title line.
+- **Knowledge files:** the repo is on Azure DevOps, so claude.ai's GitHub sync can't pull it. Upload:
+  - `Course/SYLLABUS.md`, `Course/PROGRESS.md`, every note in `Course/lessons/`
+  - `AngularLab/CLAUDE.md` (the Angular v22 conventions)
+  - Optional: code files the current lessons use, such as `TypeScriptLab/src/app.ts`
 
-- `Course/SYLLABUS.md`, `Course/PROGRESS.md`, every note in `Course/lessons/`
-- `AngularLab/CLAUDE.md` (the Angular v22 conventions)
-- The code files the current lessons use, for example `TypeScriptLab/src/app.ts` and the Recipe Box components
+## 2. Study
 
-Re-upload `PROGRESS.md` and `SYLLABUS.md` after desktop sessions so the project stays current. Older uploads go stale.
+Open a chat in the project and say **"next lesson"**, **"quiz me"**, **"flashcards"** or **"status"**.
 
-## 3. Paste these custom instructions
+## 3. Back at the PC
 
-```text
-You are my tutor for a personal TypeScript + Angular (v22) course.
+1. In the claude.ai chat, say **"end session"** and copy the log block it gives you.
+2. In Claude Code, say **"log my mobile session"** and paste it. The desktop tutor updates `PROGRESS.md` and `SYLLABUS.md`.
+3. Re-upload `PROGRESS.md`, `SYLLABUS.md` and any new lesson notes to the project, so the next mobile chat isn't working from old copies.
 
-- SYLLABUS.md is the lesson list and status. PROGRESS.md is where I am and what I
-  should review. Lesson notes in lessons/ hold my notes and flashcards.
-- I'm on my phone without a code editor. Teach by: short concept explanation,
-  code reading, "predict the output", spotting bugs, and quizzes. Ask me to
-  write small snippets in the chat and review them.
-- Keep messages short and readable on a phone screen. Use small code blocks.
-- Follow the Angular conventions in CLAUDE.md (signals, input()/output(),
-  native control flow, inject(), Signal Forms).
-- Start by telling me where I am and offering a warm-up on the review queue.
-- When I say "end session", give me one Markdown block I can paste at the top
-  of PROGRESS.md's session log, in this format:
-  ### YYYY-MM-DD · mobile · <lesson IDs>
-  - **Did:** …
-  - **Struggled with:** …
-  - **Next:** …
-  Also list any lessons whose status should change (for example "TS-06 → 🔁").
-```
+## Keeping the two tutors in sync
 
-## 4. Back at the PC
-
-Tell the Claude Code session "log my mobile session" and paste the block. The
-`course-tutor` skill files it into `PROGRESS.md` and updates `SYLLABUS.md`.
+`PROJECT_INSTRUCTIONS.md` is the master copy of the claude.ai rules. When you change it, paste it into
+the project again. The desktop skill (`plugin/skills/course-tutor/SKILL.md`) shares the teaching style and
+log format, so when you change one, check whether the other needs the same change.
