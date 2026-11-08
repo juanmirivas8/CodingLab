@@ -27,7 +27,7 @@ Write three functions that each break one strict rule (`noImplicitAny`, `strictN
 
 ## Flashcards
 
-Question/answer pairs for spaced review (also used in mobile sessions).
+Question/answer pairs for spaced review (also loaded into the Drills app).
 
 - **Q:** … — **A:** …
 

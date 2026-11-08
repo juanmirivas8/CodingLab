@@ -33,16 +33,5 @@
       "Read(**/bin/**)",
       "Read(**/obj/**)"
     ]
-  },
-  "extraKnownMarketplaces": {
-    "codinglab": {
-      "source": {
-        "source": "directory",
-        "path": "/home/juanmirivas8/Desktop/CodingLab/Course"
-      }
-    }
-  },
-  "enabledPlugins": {
-    "ts-angular-course@codinglab": true
   }
 }
