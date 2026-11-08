@@ -12,6 +12,7 @@ A personal, self-paced course that uses this repo's labs as its workspace:
 | [lessons/](lessons/) | One note per lesson (goals, key ideas, my solution, flashcards). Start from `_TEMPLATE.md`. |
 | [CLAUDE_PROJECT.md](CLAUDE_PROJECT.md) | How to set up the claude.ai Project for studying on mobile. |
 | [PROJECT_INSTRUCTIONS.md](PROJECT_INSTRUCTIONS.md) | The tutor rules to paste into the claude.ai Project's instructions. |
+| [quiz-app/](quiz-app/) | **TypeScript & Angular Drills**, a phone-friendly spaced-repetition quiz published at https://claude.ai/artifact/UUq2pg8EUf4PqRG97uoFHP. Includes the page source, the seed questions and `sync_syllabus.py`. The desktop tutor reads your scores from it and adds each lesson's flashcards to it. |
 | [plugin/](plugin/) | The `ts-angular-course` Claude Code plugin: `course-tutor` skill, `ng-curriculum` and `exercise-reviewer` subagents, Angular CLI MCP. |
 | `.claude-plugin/marketplace.json` | Local `codinglab` marketplace that the repo's `.claude/settings.json` installs the plugin from. |
 
