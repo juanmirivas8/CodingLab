@@ -223,9 +223,19 @@ pre.code .k { color: var(--code-kw); } pre.code .s { color: var(--code-str); } p
     return out + esc(code.slice(last));
   }
 
+  // A lesson counts as done when every one of its questions was last answered correctly.
+  // Adding questions (the "+5" button) leaves new unanswered ones, so it drops back to in progress.
+  function quizDone(id) {
+    const qs = [...S.questions.values()].filter((q) => q.lesson === id);
+    return qs.length > 0 && qs.every((q) => S.progress.get(q.id)?.lastOk === true);
+  }
   function lessonInfo(id) {
     const l = S.syllabus?.lessons?.find((x) => x.id === id);
-    const st = STATUS[l?.status] || STATUS["⬜"];
+    let st = STATUS[l?.status] || STATUS["⬜"];
+    if (st.key !== "skipped" && S.loaded.questions && S.loaded.progress) {
+      const hasQuestions = [...S.questions.values()].some((q) => q.lesson === id);
+      if (hasQuestions) st = quizDone(id) ? STATUS["✅"] : (st.key === "done" || st.key === "todo" ? STATUS["🟡"] : st);
+    }
     return { id, title: l?.title || id, status: st };
   }
   function isActiveLesson(id) {
@@ -290,7 +300,7 @@ pre.code .k { color: var(--code-kw); } pre.code .s { color: var(--code-str); } p
     for (const q of S.questions.values()) counts.set(q.lesson, (counts.get(q.lesson) || 0) + 1);
 
     const row = (l) => {
-      const st = (STATUS[l.status] || STATUS["⬜"]);
+      const st = lessonInfo(l.id).status;
       const n = counts.get(l.id) || 0;
       return `<div class="lesson">
         <span class="id ${track(l.id)}">${esc(l.id)}</span>
@@ -301,7 +311,7 @@ pre.code .k { color: var(--code-kw); } pre.code .s { color: var(--code-str); } p
           ${S.sample && S.canWrite ? `<button class="btn small ghost" data-act="gen" data-id="${esc(l.id)}" ${S.gen.busy ? "disabled" : ""} aria-label="Generate 5 new questions for ${esc(l.id)}">+5</button>` : ""}
         </div></div>`;
     };
-    const active = lessons.filter((l) => ACTIVE.has((STATUS[l.status] || STATUS["⬜"]).key) || l.id === S.syllabus?.current);
+    const active = lessons.filter((l) => ACTIVE.has(lessonInfo(l.id).status.key) || l.id === S.syllabus?.current);
     const upcoming = lessons.filter((l) => !active.includes(l));
 
     app.innerHTML = headerHtml() + `
@@ -395,10 +405,10 @@ pre.code .k { color: var(--code-kw); } pre.code .s { color: var(--code-str); } p
   }
 
   // ---------- quiz flow ----------
-  function startQuiz(questions, label, mode, lesson) {
+  function startQuiz(questions, label, mode, lesson, limit = QUIZ_SIZE) {
     if (!questions.length) return;
-    const items = questions.slice(0, QUIZ_SIZE).map((q) => ({ ...q, order: shuffle(q.options.map((_, i) => i)) }));
-    S.quiz = { items, i: 0, picked: null, results: [], label, mode, lesson: lesson || null };
+    const items = questions.slice(0, limit).map((q) => ({ ...q, order: shuffle(q.options.map((_, i) => i)) }));
+    S.quiz = { items, i: 0, picked: null, results: [], label, mode, lesson: lesson || null, attemptId: "a" + Date.now().toString(36) + Math.random().toString(36).slice(2, 8) };
     S.view = "quiz";
     S.writeError = "";
     render();
@@ -421,25 +431,27 @@ pre.code .k { color: var(--code-kw); } pre.code .s { color: var(--code-str); } p
       seen: (prev.seen || 0) + 1, correct: (prev.correct || 0) + (ok ? 1 : 0),
       lastOk: ok, lastAt: now(),
     };
-    try { await S.db.collection("progress").doc(q.id).set(next); }
+    try {
+      await S.db.collection("progress").doc(q.id).set(next);
+      await saveAttempt();
+    }
     catch (e) { S.writeError = "Your answers can't be saved right now, so the review schedule won't update."; }
   }
 
-  async function finishQuiz() {
+  // The attempt is rewritten after every answer, so a quiz left early still shows up in the history.
+  async function saveAttempt() {
     const z = S.quiz;
+    if (!S.db || !S.canWrite || !z.results.length) return;
+    await S.db.collection("attempts").doc(z.attemptId).set({
+      at: now(), mode: z.mode, label: z.label, lesson: z.lesson, total: z.results.length,
+      correct: z.results.filter((r) => r.ok).length,
+      items: z.results.map((r) => ({ qid: r.qid, lesson: r.lesson, topic: r.topic, ok: r.ok })),
+    });
+  }
+
+  async function finishQuiz() {
     S.view = "results";
     render();
-    if (!S.db || !S.canWrite || !z.results.length) return;
-    const correct = z.results.filter((r) => r.ok).length;
-    try {
-      await S.db.collection("attempts").add({
-        at: now(), mode: z.mode, label: z.label, lesson: z.lesson, total: z.results.length, correct,
-        items: z.results.map((r) => ({ qid: r.qid, lesson: r.lesson, topic: r.topic, ok: r.ok })),
-      });
-    } catch (e) {
-      S.writeError = e?.code === "quota_exceeded" ? "Storage is full: old quiz results need clearing before new ones can be saved." : "This quiz's score couldn't be saved.";
-      render();
-    }
   }
 
   // ---------- question generation (asks Claude) ----------
@@ -500,8 +512,10 @@ Never put multi-line code in options. Exactly one option is correct.`;
     else if (act === "lesson") {
       const id = b.dataset.id;
       const qs = [...S.questions.values()].filter((q) => q.lesson === id);
-      const byWeak = shuffle(qs).sort((a, c) => (S.progress.get(a.id)?.box ?? 0) - (S.progress.get(c.id)?.box ?? 0));
-      startQuiz(byWeak, `${id} · ${lessonInfo(id).title}`, "lesson", id);
+      // Not-yet-passing questions (never answered, or last answer wrong) come first, then the rest, weakest box first.
+      const rank = (x) => (S.progress.get(x.id)?.lastOk === true ? 1 : 0);
+      const byWeak = shuffle(qs).sort((a, c) => rank(a) - rank(c) || (S.progress.get(a.id)?.box ?? 0) - (S.progress.get(c.id)?.box ?? 0));
+      startQuiz(byWeak, `${id} · ${lessonInfo(id).title}`, "lesson", id, Infinity); // a lesson quiz covers every question
     } else if (act === "missed") {
       const src = S.view === "results" ? S.quiz.results : (S.attempts[0]?.items || []);
       const qs = src.filter((r) => !r.ok).map((r) => S.questions.get(r.qid)).filter(Boolean);
