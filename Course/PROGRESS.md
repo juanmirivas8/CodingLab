@@ -17,10 +17,10 @@ quizzing these.
 
 ## Session log
 
-Newest first. One entry per study session, desktop or mobile.
+Newest first. One entry per study session, desktop or remote.
 
 <!--
-### YYYY-MM-DD · desktop|mobile · <lesson IDs>
+### YYYY-MM-DD · desktop|remote · <lesson IDs>
 - **Did:** what was covered / built
 - **Code:** files or commit
 - **Struggled with:** …

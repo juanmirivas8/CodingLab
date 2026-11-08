@@ -10,26 +10,23 @@ A personal, self-paced course that uses this repo's labs as its workspace:
 | [SYLLABUS.md](SYLLABUS.md) | Course structure: tracks, units, lesson IDs, status. |
 | [PROGRESS.md](PROGRESS.md) | Where I am now, the review queue, and the session log (past sessions). |
 | [lessons/](lessons/) | One note per lesson (goals, key ideas, my solution, flashcards). Start from `_TEMPLATE.md`. |
-| [CLAUDE_PROJECT.md](CLAUDE_PROJECT.md) | How to set up the claude.ai Project for studying on mobile. |
-| [PROJECT_INSTRUCTIONS.md](PROJECT_INSTRUCTIONS.md) | The tutor rules to paste into the claude.ai Project's instructions. |
-| [quiz-app/](quiz-app/) | **TypeScript & Angular Drills**, a phone-friendly spaced-repetition quiz published at https://claude.ai/artifact/UUq2pg8EUf4PqRG97uoFHP. Includes the page source, the seed questions and `sync_syllabus.py`. The desktop tutor reads your scores from it and adds each lesson's flashcards to it. |
-| [plugin/](plugin/) | The `ts-angular-course` Claude Code plugin: `course-tutor` skill, `ng-curriculum` and `exercise-reviewer` subagents, Angular CLI MCP. |
-| `.claude-plugin/marketplace.json` | Local `codinglab` marketplace that the repo's `.claude/settings.json` installs the plugin from. |
+| [quiz-app/](quiz-app/) | **TypeScript & Angular Drills**, a phone-friendly spaced-repetition quiz published at https://claude.ai/artifact/Rdr2xYVVuQgX9P3dNbRXej. Includes the page source, the seed questions and `sync_syllabus.py`. The desktop tutor reads your scores from it and adds each lesson's flashcards to it. |
+| `../.claude/skills/course-tutor`, `../.claude/agents/` | The `course-tutor` skill (run it with `/course-tutor`) and the `ng-curriculum` and `exercise-reviewer` subagents. `../.mcp.json` declares the Angular CLI MCP server. |
 
 Past, present and future are all in the files: ✅ lessons and the session log
 are the past, the "Now" block is the present, and ⬜ lessons in the learning path are the future.
 
-## Three ways to study
+## Ways to study
 
 ### 1. At the PC — Claude Code (main mode)
 
-Open a Claude Code session in the repo root and say **"next lesson"** (or `/ts-angular-course:course-tutor`).
+Open a Claude Code session in the repo root and say **"next lesson"** (or `/course-tutor`).
 The tutor reads the course files and asks every question as a clickable quiz. For Angular lessons
 it sends the `ng-curriculum` subagent to digest the Angular CLI MCP `ai_tutor` module, and when you
 finish an exercise the `exercise-reviewer` subagent checks it with a real build. Say **"end session"**
 to update the log.
 
-The plugin brings its own Angular CLI MCP server (`npx -y @angular/cli mcp`).
+The project's `.mcp.json` starts the Angular CLI MCP server (`npx -y @angular/cli mcp`).
 
 ### 2. Away from the PC with the PC on — Remote Control
 
@@ -38,10 +35,11 @@ from the Claude app on your phone. It's the same session with the same files and
 so the tutor can still read the repo and update the log. Say **"mobile mode"** if you
 can't write code comfortably.
 
-### 3. Fully offline from the PC — Claude Project
+### 3. Phone drills — the Drills app
 
-Follow [CLAUDE_PROJECT.md](CLAUDE_PROJECT.md). The project tutors from uploaded
-copies of the course files, and at the end gives you a log block to paste back here.
+Open the published **TypeScript & Angular Drills** artifact on your phone for spaced-repetition quizzes.
+It shares its database with the desktop tutor, so there is nothing to copy back. Free-form front-end
+questions can go in a plain claude.ai chat or Project; copy anything worth keeping into `lessons/`.
 
 ## Conventions
 

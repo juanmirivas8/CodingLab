@@ -25,7 +25,7 @@ What I was asked to build.
 
 ## Flashcards
 
-Question/answer pairs for spaced review (also used in mobile sessions).
+Question/answer pairs for spaced review (also loaded into the Drills app).
 
 - **Q:** … — **A:** …
 

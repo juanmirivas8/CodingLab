@@ -10,7 +10,7 @@ This repository is a playground for learning, experimenting with, and comparing 
 - `TypeScriptLab/` — browser-based TypeScript/Vite playground. The app entry point is `src/app.ts`, with implementation examples under `src/Implementations/`.
 - `DotNetLab/` — .NET solution `DotNetLab.sln`, containing `DotNetLab.Model`, `DotNetLab.Database` (SQL project), `DotNetLab.MinimalAPI.Host`, `DotNetLab.Services`, `DotNetLab.Data`, and `DotNetLab.NotificationFunction`.
 - `Miscellaneous/` — space for standalone experiments that do not belong to one of the focused labs.
-- `Course/` — personal TypeScript + Angular course: syllabus, progress log and lesson notes. `Course/plugin/` is the `ts-angular-course` Claude Code plugin (tutor skill, `ng-curriculum` and `exercise-reviewer` subagents, Angular CLI MCP), installed from the local `codinglab` marketplace. Keep `Course/SYLLABUS.md` and `Course/PROGRESS.md` in sync when lessons change.
+- `Course/` — personal TypeScript + Angular course: syllabus, progress log and lesson notes. The tutor is the `course-tutor` skill (`.claude/skills/`) with the `ng-curriculum` and `exercise-reviewer` subagents (`.claude/agents/`); the Angular CLI MCP server is declared in `.mcp.json`. Keep `Course/SYLLABUS.md` and `Course/PROGRESS.md` in sync when lessons change.
 
 Each lab has its own `CLAUDE.md` with lab-specific commands and conventions, which Claude Code loads when working in that folder.
 
